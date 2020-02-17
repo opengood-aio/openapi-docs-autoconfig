@@ -1,13 +1,17 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+object DependencyVersions {
+    const val springFoxSwaggerVersion = "2.9.2"
+    const val swaggerVersion = "2.0.10"
+}
+
 plugins {
-    id("org.springframework.boot") version "2.2.4.RELEASE"
-    id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
+    id("org.springframework.boot") version "2.2.4.RELEASE"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
 }
 
 group = "io.opengood.autoconfig"
@@ -18,9 +22,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("io.springfox:springfox-swagger2:${DependencyVersions.springFoxSwaggerVersion}")
+    implementation("io.springfox:springfox-swagger-ui:${DependencyVersions.springFoxSwaggerVersion}")
+    implementation("io.swagger.core.v3:swagger-annotations:${DependencyVersions.swaggerVersion}")
+    implementation("io.swagger.core.v3:swagger-core:${DependencyVersions.swaggerVersion}")
+    implementation("io.swagger.core.v3:swagger-models:${DependencyVersions.swaggerVersion}")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

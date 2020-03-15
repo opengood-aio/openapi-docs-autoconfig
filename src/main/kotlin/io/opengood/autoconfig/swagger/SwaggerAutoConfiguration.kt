@@ -2,7 +2,6 @@ package io.opengood.autoconfig.swagger
 
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory.getLogger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,31 +25,20 @@ import java.util.Date as UtilDate
 @Configuration
 @ConditionalOnExpression("'\${swagger.type}' == 'app' or '\${swagger.type}' == 'service'")
 @EnableSwagger2
-class SwaggerAutoConfiguration {
-    lateinit var swaggerProperties: SwaggerProperties
-    @Autowired(required = false)
-    lateinit var swaggerVersion: SwaggerVersion
-    @Autowired(required = false)
-    lateinit var oAuth2: OAuth2
-
-    lateinit var paths: String
-    lateinit var version: String
-    lateinit var authUri: String
-    lateinit var tokenUri: String
-
-    companion object {
-        @Suppress("JAVA_CLASS_ON_COMPANION")
-        @JvmStatic
-        private val log = getLogger(javaClass.enclosingClass)
-    }
-
-    init {
-        paths = swaggerProperties.paths.takeIf { it.isNotEmpty() }.let { it?.joinToString(",") }
-            ?: SwaggerProperties.DEFAULT_PATH
-        version = swaggerVersion.version.takeIf { it.isNotBlank() } ?: swaggerProperties.version
-        authUri = oAuth2.resource.authorizationServerUri.takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_AUTH_URI
-        tokenUri = oAuth2.tokenUri.takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_TOKEN_URI
-    }
+class SwaggerAutoConfiguration(
+    val swaggerProperties: SwaggerProperties = SwaggerProperties(),
+    val swaggerVersion: SwaggerVersion = DefaultSwaggerVersion(),
+    val oAuth2: OAuth2 = OAuth2()
+) {
+    val paths = swaggerProperties.paths
+        .takeIf { !it.isNullOrEmpty() }
+        .let { it?.joinToString(",") } ?: SwaggerProperties.DEFAULT_PATH
+    val version = swaggerVersion.version
+        .takeIf { it.isNotBlank() } ?: swaggerProperties.version
+    val authUri = oAuth2.resource.authorizationServerUri
+        .takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_AUTH_URI
+    val tokenUri = oAuth2.tokenUri
+        .takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_TOKEN_URI
 
     @Bean
     fun productApi(): Docket {
@@ -90,10 +78,10 @@ class SwaggerAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnExpression("'\${security.oauth2}' != null")
+    @ConditionalOnExpression("'\${swagger.security.oauth2}' != null")
     fun securityInfo(): SecurityConfiguration {
         log.info("Setup Swagger security configuration")
-        return if (SwaggerType.SERVICE == swaggerProperties.type) {
+        return if (SwaggerProperties.Type.SERVICE == swaggerProperties.type) {
             SecurityConfigurationBuilder.builder()
                 .clientId(StringUtils.EMPTY)
                 .clientSecret(StringUtils.EMPTY)
@@ -107,11 +95,10 @@ class SwaggerAutoConfiguration {
     }
 
     private fun securitySchemes(): SecurityScheme {
-        return if (SwaggerType.SERVICE == swaggerProperties.type) {
-            val grantType = ClientCredentialsGrant(authUri)
+        return if (SwaggerProperties.Type.SERVICE == swaggerProperties.type) {
             OAuthBuilder()
                 .name("spring_oauth")
-                .grantTypes(listOf(grantType))
+                .grantTypes(listOf(ClientCredentialsGrant(authUri)))
                 .scopes(scopes())
                 .build()
         } else {
@@ -136,7 +123,13 @@ class SwaggerAutoConfiguration {
     private fun scopes(): List<AuthorizationScope> {
         return oAuth2.client.scopes
             .takeIf { it.isNotEmpty() }
-            .let { it?.values?.map { it -> AuthorizationScope(it, "") } }
+            .let { it?.values?.map { s -> AuthorizationScope(s, "") } }
             ?: emptyList()
+    }
+
+    companion object {
+        @Suppress("JAVA_CLASS_ON_COMPANION")
+        @JvmStatic
+        private val log = getLogger(javaClass.enclosingClass)
     }
 }

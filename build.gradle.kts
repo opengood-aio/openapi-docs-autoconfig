@@ -3,8 +3,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 object DependencyVersions {
-    const val springFoxSwaggerVersion = "2.9.2"
-    const val swaggerVersion = "2.0.10"
+    const val mockK = "1.9.3"
+    const val springFoxSwagger = "2.9.2"
+    const val swagger = "2.0.10"
 }
 
 plugins {
@@ -24,16 +25,19 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework:spring-web")
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("io.springfox:springfox-swagger2:${DependencyVersions.springFoxSwaggerVersion}")
-    implementation("io.springfox:springfox-swagger-ui:${DependencyVersions.springFoxSwaggerVersion}")
-    implementation("io.swagger.core.v3:swagger-annotations:${DependencyVersions.swaggerVersion}")
-    implementation("io.swagger.core.v3:swagger-core:${DependencyVersions.swaggerVersion}")
-    implementation("io.swagger.core.v3:swagger-models:${DependencyVersions.swaggerVersion}")
+    implementation("io.springfox:springfox-swagger2:${DependencyVersions.springFoxSwagger}")
+    implementation("io.springfox:springfox-swagger-ui:${DependencyVersions.springFoxSwagger}")
+    implementation("io.swagger.core.v3:swagger-annotations:${DependencyVersions.swagger}")
+    implementation("io.swagger.core.v3:swagger-core:${DependencyVersions.swagger}")
+    implementation("io.swagger.core.v3:swagger-models:${DependencyVersions.swagger}")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    testImplementation("io.mockk:mockk:${DependencyVersions.mockK}")
 }
 
 tasks.withType<Test> {
@@ -49,6 +53,8 @@ tasks.withType<Test> {
 
     maxParallelForks = Runtime.getRuntime().availableProcessors() / 2 + 1
 
+    systemProperty("junit.jupiter.testinstance.lifecycle.default", "per_class")
+
     doFirst {
         println("***************************************************")
         println(" >> Running Tests")
@@ -60,9 +66,9 @@ tasks.withType<Test> {
         override fun beforeTest(testDescriptor: TestDescriptor) {}
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {}
         override fun afterSuite(suite: TestDescriptor, result: TestResult) {
-            if (suite.parent != null) {
+            if (suite.parent == null) {
                 val output =
-                    "Results: ${result.resultType} " + "" +
+                    "Results: ${result.resultType} " +
                         "(" +
                         "${result.testCount} tests, " +
                         "${result.successfulTestCount} successes, " +
@@ -73,10 +79,12 @@ tasks.withType<Test> {
                 val endItem = " |"
                 val repeatLength = startItem.length + output.length + endItem.length
                 println("""
+                    |
                     |${"-".repeat(repeatLength)}
                     |$startItem$output$endItem
                     |${"-".repeat(repeatLength)}
-                    """".trimMargin())
+                    |
+                    """.trimMargin())
             }
         }
     })

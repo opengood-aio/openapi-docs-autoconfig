@@ -3,6 +3,7 @@ package io.opengood.autoconfig.swagger
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.AuthorizationCodeGrantBuilder
@@ -23,22 +24,23 @@ import java.sql.Time as SqlTime
 import java.util.Date as UtilDate
 
 @Configuration
-@ConditionalOnExpression("'\${swagger.type}' == 'app' or '\${swagger.type}' == 'service'")
+@ConditionalOnExpression("'\${swagger}' != null")
+@EnableConfigurationProperties(value = [SwaggerProperties::class, OAuth2Properties::class])
 @EnableSwagger2
 class SwaggerAutoConfiguration(
     val swaggerProperties: SwaggerProperties = SwaggerProperties(),
     val swaggerVersion: SwaggerVersion = DefaultSwaggerVersion(),
-    val oAuth2: OAuth2 = OAuth2()
+    val oAuth2Properties: OAuth2Properties = OAuth2Properties()
 ) {
     val paths = swaggerProperties.paths
         .takeIf { !it.isNullOrEmpty() }
         .let { it?.joinToString(",") } ?: SwaggerProperties.DEFAULT_PATH
     val version = swaggerVersion.version
         .takeIf { it.isNotBlank() } ?: swaggerProperties.version
-    val authUri = oAuth2.resource.authorizationServerUri
-        .takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_AUTH_URI
-    val tokenUri = oAuth2.tokenUri
-        .takeIf { it.isNotBlank() } ?: OAuth2.DEFAULT_TOKEN_URI
+    val authUri = oAuth2Properties.resource.authorizationServerUri
+        .takeIf { it.isNotBlank() } ?: OAuth2Properties.DEFAULT_AUTH_URI
+    val tokenUri = oAuth2Properties.tokenUri
+        .takeIf { it.isNotBlank() } ?: OAuth2Properties.DEFAULT_TOKEN_URI
 
     @Bean
     fun productApi(): Docket {
@@ -81,7 +83,7 @@ class SwaggerAutoConfiguration(
     @ConditionalOnExpression("'\${swagger.security.oauth2}' != null")
     fun securityInfo(): SecurityConfiguration {
         log.info("Setup Swagger security configuration")
-        return if (SwaggerProperties.Type.SERVICE == swaggerProperties.type) {
+        return if (OAuth2Properties.GrantType.CLIENT_CREDENTIALS == oAuth2Properties.grantType) {
             SecurityConfigurationBuilder.builder()
                 .clientId(StringUtils.EMPTY)
                 .clientSecret(StringUtils.EMPTY)
@@ -95,17 +97,17 @@ class SwaggerAutoConfiguration(
     }
 
     private fun securitySchemes(): SecurityScheme {
-        return if (SwaggerProperties.Type.SERVICE == swaggerProperties.type) {
+        return if (OAuth2Properties.GrantType.CLIENT_CREDENTIALS == oAuth2Properties.grantType) {
             OAuthBuilder()
-                .name("spring_oauth")
+                .name(SECURITY_REFERENCE_NAME)
                 .grantTypes(listOf(ClientCredentialsGrant(authUri)))
                 .scopes(scopes())
                 .build()
         } else {
             OAuthBuilder()
-                .name("spring_oauth")
+                .name(SECURITY_REFERENCE_NAME)
                 .grantTypes(listOf(AuthorizationCodeGrantBuilder()
-                    .tokenEndpoint(TokenEndpoint(tokenUri, "oauth_token"))
+                    .tokenEndpoint(TokenEndpoint(tokenUri, TOKEN_NAME))
                     .tokenRequestEndpoint(TokenRequestEndpoint(authUri, "", ""))
                     .build()))
                 .scopes(scopes())
@@ -115,19 +117,22 @@ class SwaggerAutoConfiguration(
 
     private fun securityContext(): SecurityContext {
         return SecurityContext.builder()
-            .securityReferences(listOf(SecurityReference("spring_oauth", scopes().toTypedArray())))
+            .securityReferences(listOf(SecurityReference(SECURITY_REFERENCE_NAME, scopes().toTypedArray())))
             .forPaths(PathSelectors.regex(paths))
             .build()
     }
 
     private fun scopes(): List<AuthorizationScope> {
-        return oAuth2.client.scopes
+        return oAuth2Properties.client.scopes
             .takeIf { it.isNotEmpty() }
             .let { it?.values?.map { s -> AuthorizationScope(s, "") } }
             ?: emptyList()
     }
 
     companion object {
+        const val SECURITY_REFERENCE_NAME = "spring_oauth2"
+        const val TOKEN_NAME = "oauth2_token"
+
         @Suppress("JAVA_CLASS_ON_COMPANION")
         @JvmStatic
         private val log = getLogger(javaClass.enclosingClass)

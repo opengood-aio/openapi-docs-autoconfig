@@ -1,22 +1,26 @@
 package io.opengood.autoconfig.swagger
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.Configuration
-import java.util.HashMap
+import org.springframework.boot.context.properties.ConstructorBinding
+import java.util.*
 
-@Configuration
+@ConstructorBinding
 @ConfigurationProperties(prefix = "swagger.security.oauth2")
-data class OAuth2(
+data class OAuth2Properties(
+    val grantType: GrantType = GrantType.AUTHORIZATION_CODE,
     val resource: Resource = Resource(),
     val client: Client = Client(),
-    val tokenUri: String = "") {
+    val tokenUri: String = ""
+) {
+    enum class GrantType(val grantType: String) {
+        AUTHORIZATION_CODE("authorizationCode"),
+        CLIENT_CREDENTIALS("clientCredentials")
+    }
 
-    @Configuration
     data class Resource(
         val authorizationServerUri: String = ""
     )
 
-    @Configuration
     data class Client(
         val scopes: Map<String, String> = HashMap()
     )

@@ -1,4 +1,4 @@
-package io.opengood.autoconfig.swagger.app
+package io.opengood.app.test
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

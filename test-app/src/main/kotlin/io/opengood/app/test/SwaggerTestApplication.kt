@@ -1,4 +1,4 @@
-package io.opengood.autoconfig.swagger.app
+package io.opengood.app.test
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

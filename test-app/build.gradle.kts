@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-    mainClassName = "io.opengood.autoconfig.swagger.app.SwaggerTestApplication"
+    mainClassName = "io.opengood.app.test.SwaggerTestApplication"
 }
 
 dependencies {

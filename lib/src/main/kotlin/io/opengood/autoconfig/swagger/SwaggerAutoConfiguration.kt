@@ -2,7 +2,6 @@ package io.opengood.autoconfig.swagger
 
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory.getLogger
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean

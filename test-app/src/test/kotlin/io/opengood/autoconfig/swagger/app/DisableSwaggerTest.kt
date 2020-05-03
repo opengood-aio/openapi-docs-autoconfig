@@ -1,4 +1,4 @@
-package io.opengood.autoconfig.swagger
+package io.opengood.autoconfig.swagger.app
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest(classes = [DisableSwaggerController::class])
+@SpringBootTest(classes = [SwaggerTestApplication::class])
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("disable-swagger")
 @AutoConfigureMockMvc

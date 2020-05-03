@@ -1,0 +1,14 @@
+swagger:
+  enabled: true
+  title: test-app
+  description: Swagger test application
+  security:
+    oauth2:
+      enabled: true
+      grant-type: authorizationCode
+      resource:
+        authorization-server-uri: http://localhost/oauth2/authorize
+      client:
+        scopes:
+          test: test-scope
+      token-uri: http://localhost/oauth2/token

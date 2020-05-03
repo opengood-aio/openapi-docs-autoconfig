@@ -3,6 +3,7 @@ package io.opengood.autoconfig.swagger
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,7 +25,7 @@ import java.sql.Time as SqlTime
 import java.util.Date as UtilDate
 
 @Configuration
-@ConditionalOnExpression("'\${swagger}' != null")
+@ConditionalOnProperty("swagger.enabled")
 @EnableConfigurationProperties(value = [SwaggerProperties::class, OAuth2Properties::class])
 @EnableSwagger2
 class SwaggerAutoConfiguration(
@@ -55,7 +56,7 @@ class SwaggerAutoConfiguration(
             .paths(PathSelectors.regex(paths))
             .build()
 
-        if (swaggerProperties.security.enabled && !authUri.contains("localhost")) {
+        if (oAuth2Properties.enabled && !authUri.contains("localhost")) {
             productApi.securitySchemes(listOf(securitySchemes()))
             productApi.securityContexts(listOf(securityContext()))
         }
@@ -80,7 +81,7 @@ class SwaggerAutoConfiguration(
     }
 
     @Bean
-    @ConditionalOnExpression("'\${swagger.security.oauth2}' != null")
+    @ConditionalOnProperty("swagger.security.oauth2.enabled")
     fun securityInfo(): SecurityConfiguration {
         log.info("Setup Swagger security configuration")
         return if (OAuth2Properties.GrantType.CLIENT_CREDENTIALS == oAuth2Properties.grantType) {

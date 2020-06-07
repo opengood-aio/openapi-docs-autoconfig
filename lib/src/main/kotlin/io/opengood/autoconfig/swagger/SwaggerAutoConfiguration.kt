@@ -24,19 +24,16 @@ import java.sql.Time as SqlTime
 import java.util.Date as UtilDate
 
 @Configuration
-@ConditionalOnProperty("swagger.enabled")
+@ConditionalOnProperty("swagger.enabled", havingValue = "true")
 @EnableConfigurationProperties(value = [SwaggerProperties::class, OAuth2Properties::class])
 @EnableSwagger2
 class SwaggerAutoConfiguration(
     val swaggerProperties: SwaggerProperties = SwaggerProperties(),
-    val swaggerVersion: SwaggerVersion = DefaultSwaggerVersion(),
     val oAuth2Properties: OAuth2Properties = OAuth2Properties()
 ) {
     val paths = swaggerProperties.paths
         .takeIf { !it.isNullOrEmpty() }
         .let { it?.joinToString(",") } ?: SwaggerProperties.DEFAULT_PATH
-    val version = swaggerVersion.version
-        .takeIf { it.isNotBlank() } ?: swaggerProperties.version
     val authUri = oAuth2Properties.resource.authorizationServerUri
         .takeIf { it.isNotBlank() } ?: OAuth2Properties.DEFAULT_AUTH_URI
     val tokenUri = oAuth2Properties.tokenUri
@@ -68,7 +65,7 @@ class SwaggerAutoConfiguration(
         return ApiInfo(
             swaggerProperties.title,
             swaggerProperties.description,
-            version,
+            swaggerProperties.version,
             swaggerProperties.termsOfServiceUrl,
             Contact(
                 swaggerProperties.contact.name,

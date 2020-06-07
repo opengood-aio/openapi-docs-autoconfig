@@ -14,58 +14,16 @@ class SwaggerAutoConfigurationTest {
     private val contextRunner = ApplicationContextRunner()
         .withInitializer(ConfigFileApplicationContextInitializer())
         .withConfiguration(AutoConfigurations.of(SwaggerAutoConfiguration::class.java))
-        .withUserConfiguration(SwaggerProperties::class.java, OAuth2Properties::class.java)
 
     @Test
-    fun `auto configures swagger from custom application properties and custom version`() {
+    fun `auto configures swagger from injected application properties`() {
         val properties = SwaggerProperties(
             enabled = true,
             groupName = "test group",
             paths = listOf("/test/path"),
             title = "test title",
             description = "test description",
-            termsOfServiceUrl = "http://test.tos.url",
-            contact = SwaggerProperties.Contact(
-                name = "test contact name",
-                url = "http://test.contact.url",
-                email = "test@domain.com"
-            ),
-            license = SwaggerProperties.License(
-                type = "test license type",
-                url = "http://test.lic.url"
-            )
-        )
-
-        val version = object : SwaggerVersion {
-            override val version: String
-                get() = "test version"
-        }
-
-        val autoConfig = SwaggerAutoConfiguration(properties, version)
-
-        val productApi = autoConfig.productApi()
-        assertThat(productApi.groupName).isEqualTo("test group")
-
-        val apiInfo = autoConfig.apiInfo()
-        assertThat(apiInfo.title).isEqualTo("test title")
-        assertThat(apiInfo.description).isEqualTo("test description")
-        assertThat(apiInfo.version).isEqualTo("test version")
-        assertThat(apiInfo.termsOfServiceUrl).isEqualTo("http://test.tos.url")
-        assertThat(apiInfo.contact.name).isEqualTo("test contact name")
-        assertThat(apiInfo.contact.url).isEqualTo("http://test.contact.url")
-        assertThat(apiInfo.contact.email).isEqualTo("test@domain.com")
-        assertThat(apiInfo.license).isEqualTo("test license type")
-        assertThat(apiInfo.licenseUrl).isEqualTo("http://test.lic.url")
-    }
-
-    @Test
-    fun `auto configures swagger from custom application properties and default version`() {
-        val properties = SwaggerProperties(
-            enabled = true,
-            groupName = "test group",
-            paths = listOf("/test/path"),
-            title = "test title",
-            description = "test description",
+            version = "test version",
             termsOfServiceUrl = "http://test.tos.url",
             contact = SwaggerProperties.Contact(
                 name = "test contact name",
@@ -86,7 +44,7 @@ class SwaggerAutoConfigurationTest {
         val apiInfo = autoConfig.apiInfo()
         assertThat(apiInfo.title).isEqualTo("test title")
         assertThat(apiInfo.description).isEqualTo("test description")
-        assertThat(apiInfo.version).isEqualTo("1.0.0")
+        assertThat(apiInfo.version).isEqualTo("test version")
         assertThat(apiInfo.termsOfServiceUrl).isEqualTo("http://test.tos.url")
         assertThat(apiInfo.contact.name).isEqualTo("test contact name")
         assertThat(apiInfo.contact.url).isEqualTo("http://test.contact.url")
@@ -96,7 +54,7 @@ class SwaggerAutoConfigurationTest {
     }
 
     @Test
-    fun `auto configures swagger from default application properties and default version`() {
+    fun `auto configures swagger from default application properties`() {
         val autoConfig = SwaggerAutoConfiguration()
 
         val productApi = autoConfig.productApi()
@@ -105,7 +63,7 @@ class SwaggerAutoConfigurationTest {
         val apiInfo = autoConfig.apiInfo()
         assertThat(apiInfo.title).isEmpty()
         assertThat(apiInfo.description).isEmpty()
-        assertThat(apiInfo.version).isEqualTo("1.0.0")
+        assertThat(apiInfo.version).isEmpty()
         assertThat(apiInfo.termsOfServiceUrl).isEmpty()
         assertThat(apiInfo.contact.name).isEmpty()
         assertThat(apiInfo.contact.url).isEmpty()
@@ -115,7 +73,7 @@ class SwaggerAutoConfigurationTest {
     }
 
     @Test
-    fun `auto configures swagger from application properties`() {
+    fun `auto configures swagger from configuration file-based application properties when swagger enabled`() {
         contextRunner
             .withPropertyValues("swagger.enabled=true")
             .run { context: AssertableApplicationContext ->
@@ -140,7 +98,17 @@ class SwaggerAutoConfigurationTest {
     }
 
     @Test
-    fun `auto configures swagger properties from application properties`() {
+    fun `does not auto configure swagger from configuration file-based application properties when swagger disabled`() {
+        contextRunner
+            .withPropertyValues("swagger.enabled=false")
+            .run { context: AssertableApplicationContext ->
+                assertThat(context).doesNotHaveBean(Docket::class.java)
+                assertThat(context).doesNotHaveBean(ApiInfo::class.java)
+            }
+    }
+
+    @Test
+    fun `auto populates swagger properties from configuration file-based application properties`() {
         contextRunner
             .run { context: AssertableApplicationContext ->
                 assertThat(context).hasSingleBean(SwaggerProperties::class.java)
@@ -165,7 +133,7 @@ class SwaggerAutoConfigurationTest {
     }
 
     @Test
-    fun `auto configures swagger OAuth2 properties from application properties`() {
+    fun `auto populates swagger OAuth2 properties from configuration file-based application properties`() {
         contextRunner
             .run { context: AssertableApplicationContext ->
                 assertThat(context).hasSingleBean(OAuth2Properties::class.java)

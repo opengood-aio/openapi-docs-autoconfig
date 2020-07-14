@@ -3,8 +3,8 @@ swagger:
   title: test-app
   description: Swagger test application
   security:
+    enabled: true
     oauth2:
-      enabled: true
       grant-type: authorizationCode
       resource:
         authorization-server-uri: http://localhost/oauth2/authorize

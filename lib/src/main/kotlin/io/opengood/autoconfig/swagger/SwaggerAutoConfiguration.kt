@@ -1,5 +1,8 @@
 package io.opengood.autoconfig.swagger
 
+import io.opengood.autoconfig.swagger.SwaggerProperties.Security.Oauth2.Companion.DEFAULT_AUTH_URI
+import io.opengood.autoconfig.swagger.SwaggerProperties.Security.Oauth2.Companion.DEFAULT_TOKEN_URI
+import io.opengood.autoconfig.swagger.SwaggerProperties.Security.Oauth2.GrantType
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory.getLogger
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -25,42 +28,40 @@ import java.util.Date as UtilDate
 
 @Configuration
 @ConditionalOnProperty("swagger.enabled", havingValue = "true")
-@EnableConfigurationProperties(value = [SwaggerProperties::class, OAuth2Properties::class])
+@EnableConfigurationProperties(value = [SwaggerProperties::class])
 @EnableSwagger2
-class SwaggerAutoConfiguration(
-    val swaggerProperties: SwaggerProperties = SwaggerProperties(),
-    val oAuth2Properties: OAuth2Properties = OAuth2Properties()
-) {
+class SwaggerAutoConfiguration(val swaggerProperties: SwaggerProperties) {
+
     val paths = swaggerProperties.paths
         .takeIf { !it.isNullOrEmpty() }
         .let { it?.joinToString(",") } ?: SwaggerProperties.DEFAULT_PATH
-    val authUri = oAuth2Properties.resource.authorizationServerUri
-        .takeIf { it.isNotBlank() } ?: OAuth2Properties.DEFAULT_AUTH_URI
-    val tokenUri = oAuth2Properties.tokenUri
-        .takeIf { it.isNotBlank() } ?: OAuth2Properties.DEFAULT_TOKEN_URI
+    val authUri = swaggerProperties.security.oauth2.resource.authorizationServerUri
+        .takeIf { it.isNotBlank() } ?: DEFAULT_AUTH_URI
+    val tokenUri = swaggerProperties.security.oauth2.tokenUri
+        .takeIf { it.isNotBlank() } ?: DEFAULT_TOKEN_URI
 
     @Bean
-    fun productApi(): Docket {
+    fun productConfig(): Docket {
         log.info("Setup Swagger product configuration")
-        val productApi = Docket(DocumentationType.SWAGGER_2)
+        val productConfig = Docket(DocumentationType.SWAGGER_2)
             .groupName(swaggerProperties.groupName)
             .directModelSubstitute(LocalDateTime::class.java, UtilDate::class.java)
             .directModelSubstitute(LocalDate::class.java, SqlDate::class.java)
             .directModelSubstitute(LocalTime::class.java, SqlTime::class.java)
-            .apiInfo(apiInfo())
+            .apiInfo(apiConfig())
             .select()
             .paths(PathSelectors.regex(paths))
             .build()
 
-        if (oAuth2Properties.enabled && !authUri.contains("localhost")) {
-            productApi.securitySchemes(listOf(securitySchemes()))
-            productApi.securityContexts(listOf(securityContext()))
+        if (swaggerProperties.security.enabled && !authUri.contains("localhost")) {
+            productConfig.securitySchemes(listOf(securitySchemes()))
+            productConfig.securityContexts(listOf(securityContext()))
         }
-        return productApi
+        return productConfig
     }
 
     @Bean
-    fun apiInfo(): ApiInfo {
+    fun apiConfig(): ApiInfo {
         log.info("Setup Swagger API configuration")
         return ApiInfo(
             swaggerProperties.title,
@@ -77,10 +78,10 @@ class SwaggerAutoConfiguration(
     }
 
     @Bean
-    @ConditionalOnProperty("swagger.security.oauth2.enabled")
-    fun securityInfo(): SecurityConfiguration {
+    @ConditionalOnProperty("swagger.security.enabled")
+    fun securityConfig(): SecurityConfiguration {
         log.info("Setup Swagger security configuration")
-        return if (OAuth2Properties.GrantType.CLIENT_CREDENTIALS == oAuth2Properties.grantType) {
+        return if (GrantType.CLIENT_CREDENTIALS == swaggerProperties.security.oauth2.grantType) {
             SecurityConfigurationBuilder.builder()
                 .clientId(StringUtils.EMPTY)
                 .clientSecret(StringUtils.EMPTY)
@@ -94,7 +95,7 @@ class SwaggerAutoConfiguration(
     }
 
     private fun securitySchemes(): SecurityScheme {
-        return if (OAuth2Properties.GrantType.CLIENT_CREDENTIALS == oAuth2Properties.grantType) {
+        return if (GrantType.CLIENT_CREDENTIALS == swaggerProperties.security.oauth2.grantType) {
             OAuthBuilder()
                 .name(SECURITY_REFERENCE_NAME)
                 .grantTypes(listOf(ClientCredentialsGrant(authUri)))
@@ -120,7 +121,7 @@ class SwaggerAutoConfiguration(
     }
 
     private fun scopes(): List<AuthorizationScope> {
-        return oAuth2Properties.client.scopes
+        return swaggerProperties.security.oauth2.client.scopes
             .takeIf { it.isNotEmpty() }
             .let { it?.values?.map { s -> AuthorizationScope(s, "") } }
             ?: emptyList()

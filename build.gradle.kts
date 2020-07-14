@@ -17,7 +17,7 @@ allprojects {
     apply(plugin = "java")
 
     group = "io.opengood.autoconfig"
-    java.sourceCompatibility = JavaVersion.VERSION_14
+    java.sourceCompatibility = JavaVersion.VERSION_13
 
     repositories {
         mavenCentral()
@@ -45,7 +45,7 @@ allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "14"
+            jvmTarget = "13"
         }
     }
 

@@ -1,3 +1,4 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -6,7 +7,7 @@ plugins {
     base
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
-    id("org.springframework.boot") version "2.3.0.RELEASE"
+    id("org.springframework.boot") version "2.3.1.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.github.ben-manes.versions") version "0.28.0"
     id("org.jetbrains.dokka") version "0.10.1"
@@ -16,16 +17,35 @@ allprojects {
     apply(plugin = "java")
 
     group = "io.opengood.autoconfig"
-    java.sourceCompatibility = JavaVersion.VERSION_11
+    java.sourceCompatibility = JavaVersion.VERSION_14
 
     repositories {
         mavenCentral()
     }
 
+    fun isNotStable(version: String): Boolean {
+        val stableKeywords = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+        val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+        val isStable = stableKeywords || regex.matches(version)
+        return isStable.not()
+    }
+
+    tasks.withType<DependencyUpdatesTask> {
+        resolutionStrategy {
+            componentSelection {
+                all {
+                    if (isNotStable(candidate.version) && !isNotStable(currentVersion)) {
+                        reject("Release candidate")
+                    }
+                }
+            }
+        }
+    }
+
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "11"
+            jvmTarget = "14"
         }
     }
 
@@ -84,10 +104,11 @@ allprojects {
             println("***************************************************")
         }
     }
-
 }
 
 subprojects {
+    apply(plugin = "com.github.ben-manes.versions")
+
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("reflect"))

@@ -12,15 +12,18 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+val springFoxSwaggerVersion = "3.0.0"
+val swaggerCoreVersion = "2.1.3"
+
 dependencies {
     implementation("javax.servlet:javax.servlet-api")
     implementation("org.springframework:spring-web")
     implementation("org.springframework:spring-webmvc")
-    implementation("io.springfox:springfox-swagger2:2.9.2")
-    implementation("io.springfox:springfox-swagger-ui:2.9.2")
-    implementation("io.swagger.core.v3:swagger-annotations:2.1.2")
-    implementation("io.swagger.core.v3:swagger-core:2.1.2")
-    implementation("io.swagger.core.v3:swagger-models:2.1.2")
+    implementation("io.springfox:springfox-swagger2:${springFoxSwaggerVersion}")
+    implementation("io.springfox:springfox-swagger-ui:${springFoxSwaggerVersion}")
+    implementation("io.swagger.core.v3:swagger-annotations:${swaggerCoreVersion}")
+    implementation("io.swagger.core.v3:swagger-core:${swaggerCoreVersion}")
+    implementation("io.swagger.core.v3:swagger-models:${swaggerCoreVersion}")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

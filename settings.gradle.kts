@@ -1,7 +1,8 @@
-rootProject.name = "swagger-auto-configuration"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenLocal()
+    }
+}
 
-include(":lib")
-project(":lib").projectDir = file("lib")
-
-include(":test-app")
-project(":test-app").projectDir = file("test-app")
+rootProject.name = "openapi-docs-autoconfig"

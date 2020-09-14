@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.opengood.autoconfig.swagger.DisableSwaggerController, \
-  io.opengood.autoconfig.swagger.SwaggerAutoConfiguration, \
-  io.opengood.autoconfig.swagger.SwaggerProperties

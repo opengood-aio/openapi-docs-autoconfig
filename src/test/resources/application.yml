@@ -1,0 +1,31 @@
+open-api-docs:
+  enabled: true
+  paths:
+    - /greeting/**
+  title: test title
+  description: test description
+  version: test version
+  terms-of-service: http://test.tos.url
+  contact:
+    name: test contact name
+    url: http://test.contact.url
+    email: test@domain.com
+  license:
+    name: test license name
+    url: http://test.lic.url
+  security:
+    enabled: true
+    name: test security
+    description: test security description
+    scheme: bearer
+    type: http
+    bearer-format: jwt
+    oauth2:
+      grant-type: clientCredentials
+      resource:
+        authorization-server-uri: http://localhost/oauth2/authorize
+      client:
+        scopes:
+          test-1: test-scope-1
+          test-2: test-scope-2
+      token-uri: http://localhost/oauth2/token

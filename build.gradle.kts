@@ -2,7 +2,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("java-library")
-    id("io.opengood.gradle.config") version "0.1.0-SNAPSHOT"
+    id("io.opengood.gradle.config") version "1.1.0"
 }
 
 group = "io.opengood.autoconfig"

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,22 +23,22 @@ class GreetingController {
             ApiResponse(
                 responseCode = "200",
                 description = "Request successfully processed",
-                content = [Content(mediaType = "application/json")]
+                content = [Content(mediaType = APPLICATION_JSON_VALUE)]
             ),
             ApiResponse(
                 responseCode = "400",
                 description = "Request format invalid",
-                content = [Content(mediaType = "application/json")]
+                content = [Content(mediaType = APPLICATION_JSON_VALUE)]
             ),
             ApiResponse(
                 responseCode = "500",
                 description = "Request failed to process",
-                content = [Content(mediaType = "application/json")]
+                content = [Content(mediaType = APPLICATION_JSON_VALUE)]
             )
         ])
     @Schema(implementation = Greeting::class)
     @GetMapping("/greet/{name}")
     fun greeting(@PathVariable name: String): ResponseEntity<Greeting> {
-        return ResponseEntity.ok(Greeting("Hello $name!"))
+        return ResponseEntity.ok(Greeting(message = "Hello $name!"))
     }
 }

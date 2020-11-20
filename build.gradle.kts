@@ -17,7 +17,7 @@ object Versions {
 dependencies {
     implementation("javax.servlet:javax.servlet-api")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springdoc:springdoc-openapi-ui:${Versions.SPRING_DOC_OPENAPI}")
+    api("org.springdoc:springdoc-openapi-ui:${Versions.SPRING_DOC_OPENAPI}")
 }
 
 tasks.getByName<Jar>("jar") {
@@ -30,20 +30,20 @@ tasks.getByName<BootJar>("bootJar") {
 
 tasks {
     val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
+        dependsOn.add("classes")
         from(sourceSets.main.get().allSource)
+        archiveClassifier.set("sources")
     }
 
     val javadocJar by creating(Jar::class) {
         dependsOn.add(javadoc)
-        archiveClassifier.set("javadoc")
         from(javadoc)
+        archiveClassifier.set("javadoc")
     }
 
     artifacts {
         archives(sourcesJar)
         archives(javadocJar)
-        archives(jar)
     }
 }
 
@@ -98,6 +98,19 @@ tasks.getByName<Upload>("uploadArchives") {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    val publishing = extensions.findByType(PublishingExtension::class.java) ?: return@afterEvaluate
+    afterEvaluate {
+        publishing.apply {
+            publications {
+                val mavenJava by registering(MavenPublication::class) {
+                    from(components["java"])
                 }
             }
         }

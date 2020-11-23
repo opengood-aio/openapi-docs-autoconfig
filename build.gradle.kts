@@ -22,12 +22,6 @@ dependencies {
 
 tasks.getByName<Jar>("jar") {
     enabled = true
-
-    into("META-INF/maven/${project.group}/${project.name}") {
-        dependsOn.add("generatePomFileForMavenJavaPublication")
-        from(tasks.getByName("generatePomFileForMavenJavaPublication"))
-        rename(".*", "pom.xml")
-    }
 }
 
 tasks.getByName<BootJar>("bootJar") {
@@ -50,6 +44,7 @@ tasks {
     artifacts {
         archives(sourcesJar)
         archives(javadocJar)
+        archives(jar)
     }
 }
 

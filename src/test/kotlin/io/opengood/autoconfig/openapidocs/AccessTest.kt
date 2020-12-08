@@ -1,34 +1,43 @@
 package io.opengood.autoconfig.openapidocs
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import app.TestApplication
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.spring.SpringListener
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.get
 
-@SpringBootTest
-@ExtendWith(SpringExtension::class)
+@SpringBootTest(classes = [TestApplication::class], webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
-class AccessTest {
+class AccessTest : WordSpec() {
 
     @Autowired
-    lateinit var mockMvc: MockMvc
+    lateinit var mvc: MockMvc
 
-    @Test
-    fun `UI endpoint is accessible`() {
-        mockMvc.perform(get("/swagger-ui.html"))
-            .andExpect(status().is3xxRedirection)
-            .andReturn()
-    }
+    override fun listeners() = listOf(SpringListener)
 
-    @Test
-    fun `API docs endpoint is accessible`() {
-        mockMvc.perform(get("/v3/api-docs"))
-            .andExpect(status().is2xxSuccessful)
-            .andReturn()
+    init {
+        "Service client accessing API endpoint" should {
+            "Send valid request and receive success status indicating UI is accessible" {
+                mvc.get("/swagger-ui.html")
+                    .andDo { print() }
+                    .andExpect {
+                        status { is3xxRedirection }
+                    }
+            }
+
+            "Send valid request and receive success status indicating API is accessible" {
+                mvc.get("/v3/api-docs")
+                    .andDo { print() }
+                    .andExpect {
+                        status { is2xxSuccessful }
+                        content { contentType(MediaType.APPLICATION_JSON) }
+                    }
+            }
+        }
     }
 }

@@ -42,9 +42,9 @@ YAML-based configuration approach.
 | `description` | API description |  |
 | `version` | API version |  |
 | `terms-of-service` | API terms of service description |  |
-| `contact` | API contact details | see *Contact* |
-| `license` | API license details | see *License* |
-| `security` | API security details | see *Security* |
+| `contact` | API contact details | see *[Contact](#contact)* |
+| `license` | API license details | see *[License](#license)* |
+| `security` | API security details | see *[Security](#security)* |
 
 #### Contact
 
@@ -71,7 +71,7 @@ YAML-based configuration approach.
 | `scheme` | API security scheme. Supported values (`bearer`, `basic`) | `basic` |
 | `type` | API security type. Supported values (`http`, `apikey`) | `http` |
 | `bearerFormat` | API security token bearer format. Supported values (`JWT`). Only required when `scheme = bearer`. | `JWT` |
-| `oauth2` | API security OAuth2 details | see *OAuth2* |
+| `oauth2` | API security OAuth2 details | see *[OAuth2](#oauth2)* |
 
 #### OAuth2
 
@@ -79,8 +79,8 @@ YAML-based configuration approach.
 |---|---|---|
 | `grant-type` | OAuth2 grant type. Supported values (`authorizationCode`, `clientCredentials`) | `authorizationCode` |
 | `token-uri` | OAuth2 token URI | `http://localhost/oauth/token` |
-| `resource` | OAuth2 resource details | see *OAuth2 Resource* |
-| `client` | OAuth2 client details | see *OAuth2 Client* |
+| `resource` | OAuth2 resource details | see *[OAuth2 Resource](#oauth2-resource)* |
+| `client` | OAuth2 client details | see *[OAuth2 Client](#oauth2-client)* |
 
 #### OAuth2 Resource
 

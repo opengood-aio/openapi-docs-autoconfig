@@ -1,188 +1,216 @@
 package io.opengood.autoconfig.openapidocs
 
-import io.opengood.autoconfig.TestApplication
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.*
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Companion.DEFAULT_PATH
+import app.TestApplication
+import helper.getSecurityScheme
+import helper.openApiDocsProperties
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.matchers.maps.shouldNotBeEmpty
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.*
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Companion.DEFAULT_SECURITY_NAME
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.*
 import io.swagger.v3.oas.models.OpenAPI
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer
-import org.springframework.boot.test.context.assertj.AssertableApplicationContext
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 
-class OpenApiDocsAutoConfigurationTest {
+class OpenApiDocsAutoConfigurationTest : WordSpec({
 
-    private val contextRunner = ApplicationContextRunner()
-        .withUserConfiguration(TestApplication::class.java)
-        .withInitializer(ConfigFileApplicationContextInitializer())
-        .withConfiguration(AutoConfigurations.of(OpenApiDocsAutoConfiguration::class.java))
+    "Auto configuration" should {
+        val contextRunner = ApplicationContextRunner()
+            .withUserConfiguration(TestApplication::class.java)
+            .withInitializer(ConfigFileApplicationContextInitializer())
+            .withConfiguration(AutoConfigurations.of(OpenApiDocsAutoConfiguration::class.java))
 
-    private val openApiDocsProperties = OpenApiDocsProperties(
-        enabled = true,
-        paths = listOf("/greeting/**"),
-        title = "test title",
-        description = "test description",
-        version = "test version",
-        termsOfService = "http://test.tos.url",
-        contact = Contact(
-            name = "test contact name",
-            url = "http://test.contact.url",
-            email = "test@domain.com"
-        ),
-        license = License(
-            name = "test license name",
-            url = "http://test.lic.url"
-        ),
-        security = Security(
-            enabled = true,
-            name = "test security",
-            description = "test security description",
-            scheme = Scheme.BEARER,
-            type = Type.HTTP,
-            bearerFormat = BearerFormat.JWT,
-            oauth2 = Oauth2(
-                grantType = GrantType.CLIENT_CREDENTIALS,
-                resource = Resource(
-                    authorizationServerUri = "http://localhost/oauth2/authorize"
-                ),
-                client = Client(
-                    scopes = mapOf(
-                        Pair("test-1", "test-scope-1"),
-                        Pair("test-2", "test-scope-2")
-                    )
-                ),
-                tokenUri = "http://localhost/oauth2/token"
-            )
-        )
-    )
+        "Configure OpenAPI docs from injected application properties" {
+            val expected = openApiDocsProperties
 
-    @Test
-    fun `auto configures openapi docs from injected application properties`() {
-        val properties = openApiDocsProperties
+            val autoConfig = OpenApiDocsAutoConfiguration(expected)
 
-        val autoConfig = OpenApiDocsAutoConfiguration(properties)
+            val openApiConfig = autoConfig.openApi()
 
-        val openApiConfig = autoConfig.openApi()
-        assertThat(openApiConfig?.paths).isEqualTo(getPaths(openApiDocsProperties.paths))
-        assertThat(openApiConfig?.info?.title).isEqualTo(openApiDocsProperties.title)
-        assertThat(openApiConfig?.info?.description).isEqualTo(openApiDocsProperties.description)
-        assertThat(openApiConfig?.info?.version).isEqualTo(openApiDocsProperties.version)
-        assertThat(openApiConfig?.info?.termsOfService).isEqualTo(openApiDocsProperties.termsOfService)
-        assertThat(openApiConfig?.info?.contact?.name).isEqualTo(openApiDocsProperties.contact.name)
-        assertThat(openApiConfig?.info?.contact?.url).isEqualTo(openApiDocsProperties.contact.url)
-        assertThat(openApiConfig?.info?.contact?.email).isEqualTo(openApiDocsProperties.contact.email)
-        assertThat(openApiConfig?.info?.license?.name).isEqualTo(openApiDocsProperties.license.name)
-        assertThat(openApiConfig?.info?.license?.url).isEqualTo(openApiDocsProperties.license.url)
-
-        val securityConfig = openApiConfig?.components?.securitySchemes?.get(openApiDocsProperties.security.name)
-        assertThat(securityConfig?.name).isEqualTo(openApiDocsProperties.security.name)
-        assertThat(securityConfig?.description).isEqualTo(openApiDocsProperties.security.description)
-        assertThat(securityConfig?.scheme).isEqualTo(openApiDocsProperties.security.scheme.toString())
-        assertThat(securityConfig?.type).isEqualTo(openApiDocsProperties.security.type.toEnum())
-        assertThat(securityConfig?.bearerFormat).isEqualTo(openApiDocsProperties.security.bearerFormat.toString())
-    }
-
-    @Test
-    fun `auto configures openapi docs from default application properties`() {
-        val autoConfig = OpenApiDocsAutoConfiguration(OpenApiDocsProperties())
-
-        val openApiConfig = autoConfig.openApi()
-        assertThat(openApiConfig?.paths).isEqualTo(getPaths(listOf(DEFAULT_PATH)))
-        assertThat(openApiConfig?.info?.title).isEmpty()
-        assertThat(openApiConfig?.info?.description).isEmpty()
-        assertThat(openApiConfig?.info?.version).isEmpty()
-        assertThat(openApiConfig?.info?.termsOfService).isEmpty()
-        assertThat(openApiConfig?.info?.contact?.name).isEmpty()
-        assertThat(openApiConfig?.info?.contact?.url).isEmpty()
-        assertThat(openApiConfig?.info?.contact?.email).isEmpty()
-        assertThat(openApiConfig?.info?.license?.name).isEmpty()
-        assertThat(openApiConfig?.info?.license?.url).isEmpty()
-
-        val securityConfig = openApiConfig?.components?.securitySchemes?.get(DEFAULT_SECURITY_NAME)
-        assertThat(securityConfig?.name).isEqualTo(DEFAULT_SECURITY_NAME)
-        assertThat(securityConfig?.description).isEmpty()
-        assertThat(securityConfig?.scheme).isEqualTo(Scheme.BASIC.toString())
-        assertThat(securityConfig?.type).isEqualTo(Type.HTTP.toEnum())
-        assertThat(securityConfig?.bearerFormat).isEqualTo(BearerFormat.JWT.toString())
-    }
-
-    @Test
-    fun `auto configures openapi docs from configuration file-based application properties when enabled`() {
-        contextRunner
-            .withPropertyValues("openapi-docs.enabled=true")
-            .run { context: AssertableApplicationContext ->
-                assertThat(context).hasSingleBean(OpenAPI::class.java)
-
-                val openApiConfig = context.getBean(OpenAPI::class.java)
-                assertThat(openApiConfig.paths).isEqualTo(getPaths(openApiDocsProperties.paths))
-                assertThat(openApiConfig.info?.title).isEqualTo(openApiDocsProperties.title)
-                assertThat(openApiConfig.info?.description).isEqualTo(openApiDocsProperties.description)
-                assertThat(openApiConfig.info?.version).isEqualTo(openApiDocsProperties.version)
-                assertThat(openApiConfig.info?.termsOfService).isEqualTo(openApiDocsProperties.termsOfService)
-                assertThat(openApiConfig.info?.contact?.name).isEqualTo(openApiDocsProperties.contact.name)
-                assertThat(openApiConfig.info?.contact?.url).isEqualTo(openApiDocsProperties.contact.url)
-                assertThat(openApiConfig.info?.contact?.email).isEqualTo(openApiDocsProperties.contact.email)
-                assertThat(openApiConfig.info?.license?.name).isEqualTo(openApiDocsProperties.license.name)
-                assertThat(openApiConfig.info?.license?.url).isEqualTo(openApiDocsProperties.license.url)
-
-                val securityConfig = openApiConfig.components?.securitySchemes?.get(openApiDocsProperties.security.name)
-                assertThat(securityConfig?.name).isEqualTo(openApiDocsProperties.security.name)
-                assertThat(securityConfig?.description).isEqualTo(openApiDocsProperties.security.description)
-                assertThat(securityConfig?.scheme).isEqualTo(openApiDocsProperties.security.scheme.toString())
-                assertThat(securityConfig?.type).isEqualTo(openApiDocsProperties.security.type.toEnum())
-                assertThat(securityConfig?.bearerFormat).isEqualTo(openApiDocsProperties.security.bearerFormat.toString())
+            openApiConfig.shouldNotBeNull()
+            with(openApiConfig) {
+                paths shouldBe getPaths(expected.paths)
+                info.shouldNotBeNull()
+                with(info) {
+                    title shouldBe expected.title
+                    description shouldBe expected.description
+                    version shouldBe expected.version
+                    termsOfService shouldBe expected.termsOfService
+                    contact.shouldNotBeNull()
+                    with(contact) {
+                        name shouldBe expected.contact.name
+                        url shouldBe expected.contact.url
+                        email shouldBe expected.contact.email
+                    }
+                    license.shouldNotBeNull()
+                    with(license) {
+                        name shouldBe expected.license.name
+                        url shouldBe expected.license.url
+                    }
+                }
             }
-    }
 
-    @Test
-    fun `does not auto configure openapi docs from configuration file-based application properties when disabled`() {
-        contextRunner
-            .withPropertyValues("openapi-docs.enabled=false")
-            .run { context: AssertableApplicationContext ->
-                assertThat(context).doesNotHaveBean(OpenAPI::class.java)
+            val securityConfig = getSecurityScheme(openApiConfig, expected.security.name)
+
+            securityConfig.shouldNotBeNull()
+            with(securityConfig) {
+                name shouldBe expected.security.name
+                description shouldBe expected.security.description
+                scheme shouldBe expected.security.scheme.toString()
+                type shouldBe expected.security.type.toEnum()
+                bearerFormat shouldBe expected.security.bearerFormat.toString()
             }
-    }
+        }
 
-    @Test
-    fun `auto populates openapi docs properties from configuration file-based application properties`() {
-        contextRunner
-            .withPropertyValues("openapi-docs.enabled=true")
-            .run { context: AssertableApplicationContext ->
-                assertThat(context).hasSingleBean(OpenApiDocsProperties::class.java)
+        "Configure OpenAPI docs from default application properties" {
+            val autoConfig = OpenApiDocsAutoConfiguration(OpenApiDocsProperties())
 
-                val properties = context.getBean(OpenApiDocsProperties::class.java)
-                assertThat(properties).isNotNull
-                assertThat(properties.enabled).isEqualTo(openApiDocsProperties.enabled)
-                assertThat(properties.paths).isEqualTo(openApiDocsProperties.paths)
-                assertThat(properties.title).isEqualTo(openApiDocsProperties.title)
-                assertThat(properties.description).isEqualTo(openApiDocsProperties.description)
-                assertThat(properties.version).isEqualTo(openApiDocsProperties.version)
-                assertThat(properties.termsOfService).isEqualTo(openApiDocsProperties.termsOfService)
-                assertThat(properties.contact).isNotNull
-                assertThat(properties.contact.name).isEqualTo(openApiDocsProperties.contact.name)
-                assertThat(properties.contact.url).isEqualTo(openApiDocsProperties.contact.url)
-                assertThat(properties.contact.email).isEqualTo(openApiDocsProperties.contact.email)
-                assertThat(properties.license).isNotNull
-                assertThat(properties.license.name).isEqualTo(openApiDocsProperties.license.name)
-                assertThat(properties.license.url).isEqualTo(openApiDocsProperties.license.url)
-                assertThat(properties.security).isNotNull
-                assertThat(properties.security.enabled).isEqualTo(openApiDocsProperties.security.enabled)
-                assertThat(properties.security.name).isEqualTo(openApiDocsProperties.security.name)
-                assertThat(properties.security.description).isEqualTo(openApiDocsProperties.security.description)
-                assertThat(properties.security.scheme).isEqualTo(openApiDocsProperties.security.scheme)
-                assertThat(properties.security.type).isEqualTo(openApiDocsProperties.security.type)
-                assertThat(properties.security.bearerFormat).isEqualTo(openApiDocsProperties.security.bearerFormat)
-                assertThat(properties.security.oauth2.grantType).isEqualTo(openApiDocsProperties.security.oauth2.grantType)
-                assertThat(properties.security.oauth2.resource).isNotNull
-                assertThat(properties.security.oauth2.resource.authorizationServerUri).isEqualTo(openApiDocsProperties.security.oauth2.resource.authorizationServerUri)
-                assertThat(properties.security.oauth2.client).isNotNull
-                assertThat(properties.security.oauth2.client.scopes).isNotEmpty
-                assertThat(properties.security.oauth2.client.scopes).isEqualTo(openApiDocsProperties.security.oauth2.client.scopes)
-                assertThat(properties.security.oauth2.tokenUri).isEqualTo(openApiDocsProperties.security.oauth2.tokenUri)
+            val openApiConfig = autoConfig.openApi()
+
+            openApiConfig.shouldNotBeNull()
+            with(openApiConfig) {
+                paths shouldBe getPaths(listOf(OpenApiDocsProperties.DEFAULT_PATH))
+                info.shouldNotBeNull()
+                with(info) {
+                    title.shouldBeEmpty()
+                    description.shouldBeEmpty()
+                    version.shouldBeEmpty()
+                    termsOfService.shouldBeEmpty()
+                    contact.shouldNotBeNull()
+                    with(contact) {
+                        name.shouldBeEmpty()
+                        url.shouldBeEmpty()
+                        email.shouldBeEmpty()
+                    }
+                    license.shouldNotBeNull()
+                    with(license) {
+                        name.shouldBeEmpty()
+                        url.shouldBeEmpty()
+                    }
+                }
             }
+
+            val securityConfig = getSecurityScheme(openApiConfig, OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME)
+
+            securityConfig.shouldNotBeNull()
+            with(securityConfig) {
+                name shouldBe OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME
+                description.shouldBeEmpty()
+                scheme shouldBe Scheme.BASIC.toString()
+                type shouldBe Type.HTTP.toEnum()
+                bearerFormat shouldBe BearerFormat.JWT.toString()
+            }
+        }
+
+        "Configures OpenAPI docs from configuration file-based application properties when enabled" {
+            contextRunner
+                .withPropertyValues("openapi-docs.enabled=true")
+                .run { context ->
+                    val expected = openApiDocsProperties
+
+                    val openApiConfig = context.getBean(OpenAPI::class.java)
+
+                    openApiConfig.shouldNotBeNull()
+                    with(openApiConfig) {
+                        paths shouldBe getPaths(expected.paths)
+                        info.shouldNotBeNull()
+                        with(info) {
+                            title shouldBe expected.title
+                            description shouldBe expected.description
+                            version shouldBe expected.version
+                            termsOfService shouldBe expected.termsOfService
+                            contact.shouldNotBeNull()
+                            with(contact) {
+                                name shouldBe expected.contact.name
+                                url shouldBe expected.contact.url
+                                email shouldBe expected.contact.email
+                            }
+                            license.shouldNotBeNull()
+                            with(license) {
+                                name shouldBe expected.license.name
+                                url shouldBe expected.license.url
+                            }
+                        }
+                    }
+
+                    val securityConfig = getSecurityScheme(openApiConfig, expected.security.name)
+
+                    securityConfig.shouldNotBeNull()
+                    with(securityConfig) {
+                        name shouldBe expected.security.name
+                        description shouldBe expected.security.description
+                        scheme shouldBe expected.security.scheme.toString()
+                        type shouldBe expected.security.type.toEnum()
+                        bearerFormat shouldBe expected.security.bearerFormat.toString()
+                    }
+                }
+        }
+
+        "Not configure OpenAPI docs from configuration file-based application properties when disabled" {
+            contextRunner
+                .withPropertyValues("openapi-docs.enabled=false")
+                .run { context ->
+                    shouldThrow<NoSuchBeanDefinitionException> { context.getBean(OpenAPI::class.java) }
+                }
+        }
+
+        "Populate OpenAPI docs properties from configuration file-based application properties" {
+            contextRunner
+                .withPropertyValues("openapi-docs.enabled=true")
+                .run { context ->
+                    val expected = openApiDocsProperties
+
+                    val properties = context.getBean(OpenApiDocsProperties::class.java)
+
+                    properties.shouldNotBeNull()
+                    with(properties) {
+                        enabled shouldBe expected.enabled
+                        paths shouldBe expected.paths
+                        title shouldBe expected.title
+                        description shouldBe expected.description
+                        version shouldBe expected.version
+                        termsOfService shouldBe expected.termsOfService
+                        contact.shouldNotBeNull()
+                        with(contact) {
+                            name shouldBe expected.contact.name
+                            url shouldBe expected.contact.url
+                            email shouldBe expected.contact.email
+                        }
+                        license.shouldNotBeNull()
+                        with(license) {
+                            name shouldBe expected.license.name
+                            url shouldBe expected.license.url
+                        }
+                        security.shouldNotBeNull()
+                        with(security) {
+                            enabled shouldBe expected.security.enabled
+                            name shouldBe expected.security.name
+                            description shouldBe expected.security.description
+                            scheme shouldBe expected.security.scheme
+                            type shouldBe expected.security.type
+                            bearerFormat shouldBe expected.security.bearerFormat
+                            oauth2.shouldNotBeNull()
+                            with(oauth2) {
+                                grantType shouldBe expected.security.oauth2.grantType
+                                resource.shouldNotBeNull()
+                                with(resource) {
+                                    authorizationServerUri shouldBe expected.security.oauth2.resource.authorizationServerUri
+                                }
+                                client.shouldNotBeNull()
+                                with(client) {
+                                    scopes.shouldNotBeEmpty()
+                                    scopes shouldBe expected.security.oauth2.client.scopes
+                                }
+                                tokenUri shouldBe expected.security.oauth2.tokenUri
+                            }
+                        }
+                    }
+                }
+        }
     }
-}
+})

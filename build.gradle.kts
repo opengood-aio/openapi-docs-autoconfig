@@ -24,7 +24,3 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     api("org.springdoc:springdoc-openapi-ui:${Versions.SPRING_DOC_OPENAPI}")
 }
-
-project.plugins.forEach {
-    println(it)
-}

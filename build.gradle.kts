@@ -1,7 +1,7 @@
 import io.opengood.gradle.enumeration.ProjectType
 
 plugins {
-    id("io.opengood.gradle.config") version "1.3.0"
+    id("io.opengood.gradle.config") version "1.3.1"
 }
 
 group = "io.opengood.autoconfig"
@@ -23,4 +23,8 @@ dependencies {
     implementation("javax.servlet:javax.servlet-api")
     implementation("org.springframework.boot:spring-boot-starter-web")
     api("org.springdoc:springdoc-openapi-ui:${Versions.SPRING_DOC_OPENAPI}")
+}
+
+project.plugins.forEach {
+    println(it)
 }

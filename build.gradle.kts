@@ -10,10 +10,13 @@ opengood {
     main {
         projectType = ProjectType.LIB
     }
+    artifact {
+        description = "Spring Boot auto-configuration for OpenAPI documentation using Spring Doc"
+    }
 }
 
 object Versions {
-    const val SPRING_DOC_OPENAPI = "1.5.0"
+    const val SPRING_DOC_OPENAPI = "1.5.1"
 }
 
 dependencies {

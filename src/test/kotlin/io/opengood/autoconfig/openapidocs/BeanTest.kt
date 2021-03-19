@@ -7,10 +7,10 @@ import io.kotest.spring.SpringListener
 import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.*
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.context.ApplicationContext
 
-@SpringBootTest(classes = [TestApplication::class], webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = [TestApplication::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class BeanTest : FunSpec() {
 
     @Autowired

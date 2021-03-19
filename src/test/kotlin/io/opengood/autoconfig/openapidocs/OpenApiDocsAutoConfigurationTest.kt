@@ -16,7 +16,6 @@ import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 
 class OpenApiDocsAutoConfigurationTest : WordSpec({

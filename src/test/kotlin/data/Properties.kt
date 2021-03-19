@@ -1,9 +1,16 @@
 package data
 
 import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.*
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.*
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.*
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Contact
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.License
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.BearerFormat
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.Client
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.GrantType
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.Resource
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Scheme
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Type
 
 val openApiDocsProperties = OpenApiDocsProperties(
     enabled = true,

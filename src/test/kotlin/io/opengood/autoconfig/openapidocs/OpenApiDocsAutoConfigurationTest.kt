@@ -1,18 +1,21 @@
 package io.opengood.autoconfig.openapidocs
 
 import app.TestApplication
+import data.openApiDocsProperties
 import helper.getSecurityScheme
-import helper.openApiDocsProperties
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.maps.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeEmpty
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.*
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.BearerFormat
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Scheme
+import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Type
 import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.boot.autoconfigure.AutoConfigurations
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 
@@ -21,7 +24,7 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
     "Auto configuration" should {
         val contextRunner = ApplicationContextRunner()
             .withUserConfiguration(TestApplication::class.java)
-            .withInitializer(ConfigFileApplicationContextInitializer())
+            .withInitializer(ConfigDataApplicationContextInitializer())
             .withConfiguration(AutoConfigurations.of(OpenApiDocsAutoConfiguration::class.java))
 
         "Configure OpenAPI docs from injected application properties" {
@@ -31,23 +34,23 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
             val openApiConfig = autoConfig.openApi()
 
-            openApiConfig.shouldNotBeNull()
             with(openApiConfig) {
+                shouldNotBeNull()
                 paths shouldBe getPaths(expected.paths)
-                info.shouldNotBeNull()
                 with(info) {
+                    shouldNotBeNull()
                     title shouldBe expected.title
                     description shouldBe expected.description
                     version shouldBe expected.version
                     termsOfService shouldBe expected.termsOfService
-                    contact.shouldNotBeNull()
                     with(contact) {
+                        shouldNotBeNull()
                         name shouldBe expected.contact.name
                         url shouldBe expected.contact.url
                         email shouldBe expected.contact.email
                     }
-                    license.shouldNotBeNull()
                     with(license) {
+                        shouldNotBeNull()
                         name shouldBe expected.license.name
                         url shouldBe expected.license.url
                     }
@@ -56,8 +59,8 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
             val securityConfig = getSecurityScheme(openApiConfig, expected.security.name)
 
-            securityConfig.shouldNotBeNull()
             with(securityConfig) {
+                shouldNotBeNull()
                 name shouldBe expected.security.name
                 description shouldBe expected.security.description
                 scheme shouldBe expected.security.scheme.toString()
@@ -71,23 +74,23 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
             val openApiConfig = autoConfig.openApi()
 
-            openApiConfig.shouldNotBeNull()
             with(openApiConfig) {
+                shouldNotBeNull()
                 paths shouldBe getPaths(listOf(OpenApiDocsProperties.DEFAULT_PATH))
-                info.shouldNotBeNull()
                 with(info) {
+                    shouldNotBeNull()
                     title.shouldBeEmpty()
                     description.shouldBeEmpty()
                     version.shouldBeEmpty()
                     termsOfService.shouldBeEmpty()
-                    contact.shouldNotBeNull()
                     with(contact) {
+                        shouldNotBeNull()
                         name.shouldBeEmpty()
                         url.shouldBeEmpty()
                         email.shouldBeEmpty()
                     }
-                    license.shouldNotBeNull()
                     with(license) {
+                        shouldNotBeNull()
                         name.shouldBeEmpty()
                         url.shouldBeEmpty()
                     }
@@ -96,8 +99,8 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
             val securityConfig = getSecurityScheme(openApiConfig, OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME)
 
-            securityConfig.shouldNotBeNull()
             with(securityConfig) {
+                shouldNotBeNull()
                 name shouldBe OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME
                 description.shouldBeEmpty()
                 scheme shouldBe Scheme.BASIC.toString()
@@ -114,23 +117,25 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
                     val openApiConfig = context.getBean(OpenAPI::class.java)
 
-                    openApiConfig.shouldNotBeNull()
                     with(openApiConfig) {
+                        shouldNotBeNull()
                         paths shouldBe getPaths(expected.paths)
                         info.shouldNotBeNull()
                         with(info) {
+                            shouldNotBeNull()
                             title shouldBe expected.title
                             description shouldBe expected.description
                             version shouldBe expected.version
                             termsOfService shouldBe expected.termsOfService
                             contact.shouldNotBeNull()
                             with(contact) {
+                                shouldNotBeNull()
                                 name shouldBe expected.contact.name
                                 url shouldBe expected.contact.url
                                 email shouldBe expected.contact.email
                             }
-                            license.shouldNotBeNull()
                             with(license) {
+                                shouldNotBeNull()
                                 name shouldBe expected.license.name
                                 url shouldBe expected.license.url
                             }
@@ -139,8 +144,8 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
                     val securityConfig = getSecurityScheme(openApiConfig, expected.security.name)
 
-                    securityConfig.shouldNotBeNull()
                     with(securityConfig) {
+                        shouldNotBeNull()
                         name shouldBe expected.security.name
                         description shouldBe expected.security.description
                         scheme shouldBe expected.security.scheme.toString()
@@ -166,42 +171,42 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
 
                     val properties = context.getBean(OpenApiDocsProperties::class.java)
 
-                    properties.shouldNotBeNull()
                     with(properties) {
+                        shouldNotBeNull()
                         enabled shouldBe expected.enabled
                         paths shouldBe expected.paths
                         title shouldBe expected.title
                         description shouldBe expected.description
                         version shouldBe expected.version
                         termsOfService shouldBe expected.termsOfService
-                        contact.shouldNotBeNull()
                         with(contact) {
+                            shouldNotBeNull()
                             name shouldBe expected.contact.name
                             url shouldBe expected.contact.url
                             email shouldBe expected.contact.email
                         }
-                        license.shouldNotBeNull()
                         with(license) {
+                            shouldNotBeNull()
                             name shouldBe expected.license.name
                             url shouldBe expected.license.url
                         }
-                        security.shouldNotBeNull()
                         with(security) {
+                            shouldNotBeNull()
                             enabled shouldBe expected.security.enabled
                             name shouldBe expected.security.name
                             description shouldBe expected.security.description
                             scheme shouldBe expected.security.scheme
                             type shouldBe expected.security.type
                             bearerFormat shouldBe expected.security.bearerFormat
-                            oauth2.shouldNotBeNull()
                             with(oauth2) {
+                                shouldNotBeNull()
                                 grantType shouldBe expected.security.oauth2.grantType
-                                resource.shouldNotBeNull()
                                 with(resource) {
+                                    shouldNotBeNull()
                                     authorizationServerUri shouldBe expected.security.oauth2.resource.authorizationServerUri
                                 }
-                                client.shouldNotBeNull()
                                 with(client) {
+                                    shouldNotBeNull()
                                     scopes.shouldNotBeEmpty()
                                     scopes shouldBe expected.security.oauth2.client.scopes
                                 }

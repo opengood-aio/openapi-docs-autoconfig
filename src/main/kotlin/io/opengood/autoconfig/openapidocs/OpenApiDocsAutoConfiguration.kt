@@ -19,38 +19,44 @@ import org.springframework.context.annotation.Configuration
 class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties) {
 
     @Bean
-    fun openApi(): OpenAPI? {
+    fun openApi(): OpenAPI {
         log.info("Setup OpenAPI docs configuration")
         return OpenAPI()
             .paths(getPaths(properties.paths))
-            .info(Info()
-                .title(properties.title)
-                .description(properties.description)
-                .version(properties.version)
-                .termsOfService(properties.termsOfService)
-                .contact(Contact()
-                    .name(properties.contact.name)
-                    .url(properties.contact.url)
-                    .email(properties.contact.email)
-                )
-                .license(License()
-                    .name(properties.license.name)
-                    .url(properties.license.url)
-                )
+            .info(
+                Info()
+                    .title(properties.title)
+                    .description(properties.description)
+                    .version(properties.version)
+                    .termsOfService(properties.termsOfService)
+                    .contact(
+                        Contact()
+                            .name(properties.contact.name)
+                            .url(properties.contact.url)
+                            .email(properties.contact.email)
+                    )
+                    .license(
+                        License()
+                            .name(properties.license.name)
+                            .url(properties.license.url)
+                    )
             )
             .also {
                 if (properties.security.enabled) {
                     it?.addSecurityItem(
-                        SecurityRequirement().addList(properties.security.name))
-                        ?.components(Components()
-                            .addSecuritySchemes(properties.security.name,
-                                SecurityScheme()
-                                    .name(properties.security.name)
-                                    .description(properties.security.description)
-                                    .scheme(properties.security.scheme.toString())
-                                    .type(properties.security.type.toEnum())
-                                    .bearerFormat(properties.security.bearerFormat.toString())
-                            )
+                        SecurityRequirement().addList(properties.security.name)
+                    )
+                        ?.components(
+                            Components()
+                                .addSecuritySchemes(
+                                    properties.security.name,
+                                    SecurityScheme()
+                                        .name(properties.security.name)
+                                        .description(properties.security.description)
+                                        .scheme(properties.security.scheme.toString())
+                                        .type(properties.security.type.toEnum())
+                                        .bearerFormat(properties.security.bearerFormat.toString())
+                                )
                         )
                 }
             }

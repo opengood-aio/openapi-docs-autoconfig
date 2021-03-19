@@ -1,4 +1,4 @@
-package helper
+package data
 
 import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties
 import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.*

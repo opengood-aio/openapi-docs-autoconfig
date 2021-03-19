@@ -16,25 +16,25 @@ import org.springframework.test.web.servlet.get
 class AccessTest : WordSpec() {
 
     @Autowired
-    lateinit var mvc: MockMvc
+    lateinit var mockMvc: MockMvc
 
     override fun listeners() = listOf(SpringListener)
 
     init {
         "Service client accessing API endpoint" should {
             "Send valid request and receive success status indicating UI is accessible" {
-                mvc.get("/swagger-ui.html")
+                mockMvc.get("/swagger-ui.html")
                     .andDo { print() }
                     .andExpect {
-                        status { is3xxRedirection }
+                        status { is3xxRedirection() }
                     }
             }
 
             "Send valid request and receive success status indicating API is accessible" {
-                mvc.get("/v3/api-docs")
+                mockMvc.get("/v3/api-docs")
                     .andDo { print() }
                     .andExpect {
-                        status { is2xxSuccessful }
+                        status { is2xxSuccessful() }
                         content { contentType(MediaType.APPLICATION_JSON) }
                     }
             }

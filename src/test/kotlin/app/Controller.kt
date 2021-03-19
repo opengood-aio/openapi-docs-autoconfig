@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController
         )
     ]
 )
-class GreetingController {
+class Controller {
 
     @Operation(
         summary = "Get greeting for given name",

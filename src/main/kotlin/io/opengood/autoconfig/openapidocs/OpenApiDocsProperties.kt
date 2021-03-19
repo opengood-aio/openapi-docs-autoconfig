@@ -17,20 +17,17 @@ data class OpenApiDocsProperties(
     val license: License = License(),
     val security: Security = Security()
 ) {
-    @ConstructorBinding
     data class Contact(
         val name: String = "",
         val url: String = "",
         val email: String = ""
     )
 
-    @ConstructorBinding
     data class License(
         val name: String = "",
         val url: String = ""
     )
 
-    @ConstructorBinding
     data class Security(
         val enabled: Boolean = true,
         val name: String = DEFAULT_SECURITY_NAME,
@@ -61,7 +58,6 @@ data class OpenApiDocsProperties(
             override fun toString() = value
         }
 
-        @ConstructorBinding
         data class Oauth2(
             val grantType: GrantType = GrantType.AUTHORIZATION_CODE,
             val resource: Resource = Resource(),
@@ -75,12 +71,10 @@ data class OpenApiDocsProperties(
                 override fun toString() = value
             }
 
-            @ConstructorBinding
             data class Resource(
                 val authorizationServerUri: String = DEFAULT_AUTH_URI
             )
 
-            @ConstructorBinding
             data class Client(
                 val scopes: Map<String, String> = HashMap()
             )

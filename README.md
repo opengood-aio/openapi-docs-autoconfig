@@ -44,7 +44,7 @@ YAML-based configuration approach.
 | Property | Description | Default |
 |---|---|---|
 | `enabled` | Value indicating if OpenAPI Docs auto configuration is enabled | `true` |
-| `path` | List of API resource paths to include in docs | `/**` |
+| `paths` | List of API resource paths to include in docs | `/**` |
 | `title` | API title |  |
 | `description` | API description |  |
 | `version` | API version |  |

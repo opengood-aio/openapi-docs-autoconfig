@@ -1,7 +1,7 @@
 import io.opengood.gradle.enumeration.ProjectType
 
 plugins {
-    id("io.opengood.gradle.config") version "1.16.0"
+    id("io.opengood.gradle.config") version "1.22.0"
 }
 
 group = "io.opengood.autoconfig"
@@ -16,7 +16,7 @@ opengood {
 }
 
 object Versions {
-    const val SPRING_DOC_OPENAPI = "1.5.6"
+    const val SPRING_DOC_OPENAPI = "1.5.9"
 }
 
 dependencies {

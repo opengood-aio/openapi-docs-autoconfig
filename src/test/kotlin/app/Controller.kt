@@ -55,9 +55,9 @@ class Controller {
         summary = "Get greeting for given name",
         parameters = [Parameter(name = "name", description = "The name of entity being greeted")]
     )
-    @Schema(implementation = Greeting::class)
+    @Schema(implementation = Model::class)
     @GetMapping("/greet/{name}")
-    fun greeting(@PathVariable name: String): ResponseEntity<Greeting> {
-        return ResponseEntity.ok(Greeting(message = "Hello $name!"))
+    fun greeting(@PathVariable name: String): ResponseEntity<Model> {
+        return ResponseEntity.ok(Model(message = "Hello $name!"))
     }
 }

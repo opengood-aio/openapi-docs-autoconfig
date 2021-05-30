@@ -5,14 +5,14 @@ open-api-docs:
   title: test title
   description: test description
   version: test version
-  terms-of-service: http://test.tos.url
+  terms-of-service: https://test.tos.url
   contact:
     name: test contact name
-    url: http://test.contact.url
+    url: https://test.contact.url
     email: test@domain.com
   license:
     name: test license name
-    url: http://test.lic.url
+    url: https://test.lic.url
   security:
     enabled: true
     name: test security

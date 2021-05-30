@@ -1,5 +1,5 @@
 package app
 
-data class Greeting(
+data class Model(
     val message: String
 )

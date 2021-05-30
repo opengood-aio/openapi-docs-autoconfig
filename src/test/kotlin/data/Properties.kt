@@ -18,15 +18,15 @@ val openApiDocsProperties = OpenApiDocsProperties(
     title = "test title",
     description = "test description",
     version = "test version",
-    termsOfService = "http://test.tos.url",
+    termsOfService = "https://test.tos.url",
     contact = Contact(
         name = "test contact name",
-        url = "http://test.contact.url",
+        url = "https://test.contact.url",
         email = "test@domain.com"
     ),
     license = License(
         name = "test license name",
-        url = "http://test.lic.url"
+        url = "https://test.lic.url"
     ),
     security = Security(
         enabled = true,

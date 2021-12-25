@@ -35,7 +35,7 @@ implementation("io.opengood.autoconfig:openapi-docs-autoconfig:VERSION")
 
 ## Configuration
 
-*OpenAPI Docs Auto Configuration* simplifies configuration using a
+OpenAPI Docs Auto Configuration simplifies configuration using a
 YAML-based configuration approach.
 
 ### Properties

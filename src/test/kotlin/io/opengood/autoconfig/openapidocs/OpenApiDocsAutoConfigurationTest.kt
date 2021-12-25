@@ -9,9 +9,11 @@ import io.kotest.matchers.maps.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeEmpty
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.BearerFormat
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Scheme
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Type
+import io.opengood.autoconfig.openapidocs.enumeration.BearerFormat
+import io.opengood.autoconfig.openapidocs.enumeration.Scheme
+import io.opengood.autoconfig.openapidocs.enumeration.Type
+import io.opengood.autoconfig.openapidocs.property.OpenApiDocsProperties
+import io.opengood.autoconfig.openapidocs.property.SecurityProperty
 import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.boot.autoconfigure.AutoConfigurations
@@ -96,11 +98,11 @@ class OpenApiDocsAutoConfigurationTest : WordSpec({
                 }
             }
 
-            val securityConfig = getSecurityScheme(openApiConfig, OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME)
+            val securityConfig = getSecurityScheme(openApiConfig, SecurityProperty.DEFAULT_SECURITY_NAME)
 
             with(securityConfig) {
                 shouldNotBeNull()
-                name shouldBe OpenApiDocsProperties.Security.DEFAULT_SECURITY_NAME
+                name shouldBe SecurityProperty.DEFAULT_SECURITY_NAME
                 description.shouldBeEmpty()
                 scheme shouldBe Scheme.BASIC.toString()
                 type shouldBe Type.HTTP.toEnum()

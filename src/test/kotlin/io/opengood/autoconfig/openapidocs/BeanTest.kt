@@ -4,6 +4,7 @@ import app.TestApplication
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.spring.SpringListener
+import io.opengood.autoconfig.openapidocs.property.OpenApiDocsProperties
 import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

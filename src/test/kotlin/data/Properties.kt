@@ -1,16 +1,16 @@
 package data
 
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Contact
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.License
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.BearerFormat
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.Client
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.GrantType
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Oauth2.Resource
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Scheme
-import io.opengood.autoconfig.openapidocs.OpenApiDocsProperties.Security.Type
+import io.opengood.autoconfig.openapidocs.enumeration.BearerFormat
+import io.opengood.autoconfig.openapidocs.enumeration.Oauth2GrantType
+import io.opengood.autoconfig.openapidocs.enumeration.Scheme
+import io.opengood.autoconfig.openapidocs.enumeration.Type
+import io.opengood.autoconfig.openapidocs.property.ContactProperty
+import io.opengood.autoconfig.openapidocs.property.LicenseProperty
+import io.opengood.autoconfig.openapidocs.property.Oauth2ClientProperty
+import io.opengood.autoconfig.openapidocs.property.Oauth2Property
+import io.opengood.autoconfig.openapidocs.property.Oauth2ResourceProperty
+import io.opengood.autoconfig.openapidocs.property.OpenApiDocsProperties
+import io.opengood.autoconfig.openapidocs.property.SecurityProperty
 
 val openApiDocsProperties = OpenApiDocsProperties(
     enabled = true,
@@ -19,28 +19,28 @@ val openApiDocsProperties = OpenApiDocsProperties(
     description = "test description",
     version = "test version",
     termsOfService = "https://test.tos.url",
-    contact = Contact(
+    contact = ContactProperty(
         name = "test contact name",
         url = "https://test.contact.url",
         email = "test@domain.com"
     ),
-    license = License(
+    license = LicenseProperty(
         name = "test license name",
         url = "https://test.lic.url"
     ),
-    security = Security(
+    security = SecurityProperty(
         enabled = true,
         name = "test security",
         description = "test security description",
         scheme = Scheme.BEARER,
         type = Type.HTTP,
         bearerFormat = BearerFormat.JWT,
-        oauth2 = Oauth2(
-            grantType = GrantType.CLIENT_CREDENTIALS,
-            resource = Resource(
+        oauth2 = Oauth2Property(
+            grantType = Oauth2GrantType.CLIENT_CREDENTIALS,
+            resource = Oauth2ResourceProperty(
                 authorizationServerUri = "http://localhost/oauth2/authorize"
             ),
-            client = Client(
+            client = Oauth2ClientProperty(
                 scopes = mapOf(
                     Pair("test-1", "test-scope-1"),
                     Pair("test-2", "test-scope-2")

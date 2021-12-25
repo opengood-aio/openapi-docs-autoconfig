@@ -17,6 +17,6 @@ opengood {
 
 dependencies {
     implementation("javax.servlet:javax.servlet-api:_")
-    implementation("org.springframework.boot:spring-boot-starter-web:_")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     api("org.springdoc:springdoc-openapi-ui:_")
 }

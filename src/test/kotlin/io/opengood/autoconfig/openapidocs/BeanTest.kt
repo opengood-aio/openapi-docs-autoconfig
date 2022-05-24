@@ -2,8 +2,8 @@ package io.opengood.autoconfig.openapidocs
 
 import app.TestApplication
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.spring.SpringListener
 import io.opengood.autoconfig.openapidocs.property.OpenApiDocsProperties
 import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ class BeanTest : FunSpec() {
     @Autowired
     lateinit var context: ApplicationContext
 
-    override fun listeners() = listOf(SpringListener)
+    override fun extensions() = listOf(SpringExtension)
 
     init {
         test("OpenApiDocsProperties bean is loaded") {

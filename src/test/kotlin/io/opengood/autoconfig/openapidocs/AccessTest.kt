@@ -2,7 +2,7 @@ package io.opengood.autoconfig.openapidocs
 
 import app.TestApplication
 import io.kotest.core.spec.style.WordSpec
-import io.kotest.spring.SpringListener
+import io.kotest.extensions.spring.SpringExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,7 +18,7 @@ class AccessTest : WordSpec() {
     @Autowired
     lateinit var mockMvc: MockMvc
 
-    override fun listeners() = listOf(SpringListener)
+    override fun extensions() = listOf(SpringExtension)
 
     init {
         "Service client accessing API endpoint" should {

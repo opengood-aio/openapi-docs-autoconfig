@@ -1,5 +1,6 @@
-package app
+package app.controller
 
+import app.model.Greeting
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -55,9 +56,9 @@ class Controller {
         summary = "Get greeting for given name",
         parameters = [Parameter(name = "name", description = "The name of entity being greeted")]
     )
-    @Schema(implementation = Model::class)
+    @Schema(implementation = Greeting::class)
     @GetMapping("/greet/{name}")
-    fun greeting(@PathVariable name: String): ResponseEntity<Model> {
-        return ResponseEntity.ok(Model(message = "Hello $name!"))
+    fun greeting(@PathVariable name: String): ResponseEntity<Greeting> {
+        return ResponseEntity.ok(Greeting(message = "Hello $name!"))
     }
 }

@@ -1,4 +1,4 @@
-package data
+package test.data
 
 import io.opengood.autoconfig.openapidocs.enumeration.BearerFormat
 import io.opengood.autoconfig.openapidocs.enumeration.Oauth2GrantType

@@ -1,8 +1,6 @@
 package io.opengood.autoconfig.openapidocs
 
 import app.TestApplication
-import data.openApiDocsProperties
-import helper.getSecurityScheme
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.maps.shouldNotBeEmpty
@@ -19,6 +17,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
+import test.data.openApiDocsProperties
+import test.getSecurityScheme
 
 class OpenApiDocsAutoConfigurationTest : WordSpec({
 

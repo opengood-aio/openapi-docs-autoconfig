@@ -9,12 +9,12 @@ import io.swagger.v3.oas.models.info.License
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import org.slf4j.LoggerFactory.getLogger
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty("openapi-docs.enabled", havingValue = "true")
 @EnableConfigurationProperties(value = [OpenApiDocsProperties::class])
 class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties) {
@@ -34,18 +34,18 @@ class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties
                         Contact()
                             .name(properties.contact.name)
                             .url(properties.contact.url)
-                            .email(properties.contact.email)
+                            .email(properties.contact.email),
                     )
                     .license(
                         License()
                             .name(properties.license.name)
-                            .url(properties.license.url)
-                    )
+                            .url(properties.license.url),
+                    ),
             )
             .also {
                 if (properties.security.enabled) {
                     it?.addSecurityItem(
-                        SecurityRequirement().addList(properties.security.name)
+                        SecurityRequirement().addList(properties.security.name),
                     )
                         ?.components(
                             Components()
@@ -56,8 +56,8 @@ class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties
                                         .description(properties.security.description)
                                         .scheme(properties.security.scheme.toString())
                                         .type(properties.security.type.toEnum())
-                                        .bearerFormat(properties.security.bearerFormat.toString())
-                                )
+                                        .bearerFormat(properties.security.bearerFormat.toString()),
+                                ),
                         )
                 }
             }

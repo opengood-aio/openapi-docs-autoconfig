@@ -11,6 +11,11 @@
 Spring Boot auto-configuration for OpenAPI documentation using
 [Spring Doc](https://springdoc.org/)
 
+## Compatibility
+
+* Java 17
+* Spring Boot 3
+
 ## Setup
 
 ### Add Dependency
@@ -42,65 +47,65 @@ YAML-based configuration approach.
 
 #### Main
 
-| Property | Description | Default |
-|---|---|---|
-| `enabled` | Value indicating if OpenAPI Docs auto configuration is enabled | `true` |
-| `paths` | List of API resource paths to include in docs | `/**` |
-| `title` | API title |  |
-| `description` | API description |  |
-| `version` | API version |  |
-| `terms-of-service` | API terms of service description |  |
-| `contact` | API contact details | see *[Contact](#contact)* |
-| `license` | API license details | see *[License](#license)* |
-| `security` | API security details | see *[Security](#security)* |
+| Property           | Description                                                    | Default                     |
+|--------------------|----------------------------------------------------------------|-----------------------------|
+| `enabled`          | Value indicating if OpenAPI Docs auto configuration is enabled | `true`                      |
+| `paths`            | List of API resource paths to include in docs                  | `/**`                       |
+| `title`            | API title                                                      |                             |
+| `description`      | API description                                                |                             |
+| `version`          | API version                                                    |                             |
+| `terms-of-service` | API terms of service description                               |                             |
+| `contact`          | API contact details                                            | see *[Contact](#contact)*   |
+| `license`          | API license details                                            | see *[License](#license)*   |
+| `security`         | API security details                                           | see *[Security](#security)* |
 
 #### Contact
 
-| Property | Description | Default |
-|---|---|---|
-| `name` | API contact name |  |
-| `url` | API contact URL |  |
-| `email` | API contact email address |  |
+| Property | Description               | Default |
+|----------|---------------------------|---------|
+| `name`   | API contact name          |         |
+| `url`    | API contact URL           |         |
+| `email`  | API contact email address |         |
 
 #### License
 
-| Property | Description | Default |
-|---|---|---|
-| `name` | API license name |  |
-| `url` | API license URL |  |
+| Property | Description      | Default |
+|----------|------------------|---------|
+| `name`   | API license name |         |
+| `url`    | API license URL  |         |
 
 #### Security
 
-| Property | Description | Default |
-|---|---|---|
-| `enabled` | Value indicating if OpenAPI Docs security is enabled | `true` |
-| `name` | API security name | `default` |
-| `description` | API security description |  |
-| `scheme` | API security scheme. Supported values (`bearer`, `basic`) | `basic` |
-| `type` | API security type. Supported values (`http`, `apikey`) | `http` |
-| `bearerFormat` | API security token bearer format. Supported values (`JWT`). Only required when `scheme = bearer`. | `JWT` |
-| `oauth2` | API security OAuth2 details | see *[OAuth2](#oauth2)* |
+| Property       | Description                                                                                       | Default                 |
+|----------------|---------------------------------------------------------------------------------------------------|-------------------------|
+| `enabled`      | Value indicating if OpenAPI Docs security is enabled                                              | `true`                  |
+| `name`         | API security name                                                                                 | `default`               |
+| `description`  | API security description                                                                          |                         |
+| `scheme`       | API security scheme. Supported values (`bearer`, `basic`)                                         | `basic`                 |
+| `type`         | API security type. Supported values (`http`, `apikey`)                                            | `http`                  |
+| `bearerFormat` | API security token bearer format. Supported values (`JWT`). Only required when `scheme = bearer`. | `JWT`                   |
+| `oauth2`       | API security OAuth2 details                                                                       | see *[OAuth2](#oauth2)* |
 
 #### OAuth2
 
-| Property | Description | Default |
-|---|---|---|
-| `grant-type` | OAuth2 grant type. Supported values (`authorizationCode`, `clientCredentials`) | `authorizationCode` |
-| `token-uri` | OAuth2 token URI | `http://localhost/oauth/token` |
-| `resource` | OAuth2 resource details | see *[OAuth2 Resource](#oauth2-resource)* |
-| `client` | OAuth2 client details | see *[OAuth2 Client](#oauth2-client)* |
+| Property     | Description                                                                    | Default                                   |
+|--------------|--------------------------------------------------------------------------------|-------------------------------------------|
+| `grant-type` | OAuth2 grant type. Supported values (`authorizationCode`, `clientCredentials`) | `authorizationCode`                       |
+| `token-uri`  | OAuth2 token URI                                                               | `http://localhost/oauth/token`            |
+| `resource`   | OAuth2 resource details                                                        | see *[OAuth2 Resource](#oauth2-resource)* |
+| `client`     | OAuth2 client details                                                          | see *[OAuth2 Client](#oauth2-client)*     |
 
 #### OAuth2 Resource
 
-| Property | Description | Default |
-|---|---|---|
+| Property                   | Description                     | Default                            |
+|----------------------------|---------------------------------|------------------------------------|
 | `authorization-server-uri` | OAuth2 authorization server URI | `http://localhost/oauth/authorize` |
 
 #### OAuth2 Client
 
-| Property | Description | Default |
-|---|---|---|
-| `scopes` | Map of OAuth2 client scopes |  |
+| Property | Description                 | Default |
+|----------|-----------------------------|---------|
+| `scopes` | Map of OAuth2 client scopes |         |
 
 ### Example
 

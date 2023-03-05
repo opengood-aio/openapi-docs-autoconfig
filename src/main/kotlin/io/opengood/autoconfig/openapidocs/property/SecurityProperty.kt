@@ -11,7 +11,7 @@ data class SecurityProperty(
     val scheme: Scheme = Scheme.BASIC,
     val type: Type = Type.HTTP,
     val bearerFormat: BearerFormat = BearerFormat.JWT,
-    val oauth2: Oauth2Property = Oauth2Property()
+    val oauth2: Oauth2Property = Oauth2Property(),
 ) {
     companion object {
         const val DEFAULT_SECURITY_NAME = "default"

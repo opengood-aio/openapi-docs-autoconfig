@@ -22,11 +22,11 @@ val openApiDocsProperties = OpenApiDocsProperties(
     contact = ContactProperty(
         name = "test contact name",
         url = "https://test.contact.url",
-        email = "test@domain.com"
+        email = "test@domain.com",
     ),
     license = LicenseProperty(
         name = "test license name",
-        url = "https://test.lic.url"
+        url = "https://test.lic.url",
     ),
     security = SecurityProperty(
         enabled = true,
@@ -38,15 +38,15 @@ val openApiDocsProperties = OpenApiDocsProperties(
         oauth2 = Oauth2Property(
             grantType = Oauth2GrantType.CLIENT_CREDENTIALS,
             resource = Oauth2ResourceProperty(
-                authorizationServerUri = "http://localhost/oauth2/authorize"
+                authorizationServerUri = "http://localhost/oauth2/authorize",
             ),
             client = Oauth2ClientProperty(
                 scopes = mapOf(
                     Pair("test-1", "test-scope-1"),
-                    Pair("test-2", "test-scope-2")
-                )
+                    Pair("test-2", "test-scope-2"),
+                ),
             ),
-            tokenUri = "http://localhost/oauth2/token"
-        )
-    )
+            tokenUri = "http://localhost/oauth2/token",
+        ),
+    ),
 )

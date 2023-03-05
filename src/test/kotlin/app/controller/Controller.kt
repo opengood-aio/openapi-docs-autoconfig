@@ -19,42 +19,42 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/greeting")
 @Tag(
     name = "Greeting Service",
-    description = "Provides greeting messages"
+    description = "Provides greeting messages",
 )
 @ApiResponses(
     value = [
         ApiResponse(
             responseCode = "200",
             description = "Success",
-            content = [Content(mediaType = APPLICATION_JSON_VALUE)]
+            content = [Content(mediaType = APPLICATION_JSON_VALUE)],
         ),
         ApiResponse(
             responseCode = "400",
             description = "Bad Request",
-            content = [Content(mediaType = APPLICATION_JSON_VALUE)]
+            content = [Content(mediaType = APPLICATION_JSON_VALUE)],
         ),
         ApiResponse(
             responseCode = "401",
             description = "Unauthorized",
-            content = [Content(mediaType = APPLICATION_JSON_VALUE)]
+            content = [Content(mediaType = APPLICATION_JSON_VALUE)],
         ),
         ApiResponse(
             responseCode = "404",
             description = "Not Found",
-            content = [Content(mediaType = APPLICATION_JSON_VALUE)]
+            content = [Content(mediaType = APPLICATION_JSON_VALUE)],
         ),
         ApiResponse(
             responseCode = "500",
             description = "Internal Server Error",
-            content = [Content(mediaType = APPLICATION_JSON_VALUE)]
-        )
-    ]
+            content = [Content(mediaType = APPLICATION_JSON_VALUE)],
+        ),
+    ],
 )
 class Controller {
 
     @Operation(
         summary = "Get greeting for given name",
-        parameters = [Parameter(name = "name", description = "The name of entity being greeted")]
+        parameters = [Parameter(name = "name", description = "The name of entity being greeted")],
     )
     @Schema(implementation = Greeting::class)
     @GetMapping("/greet/{name}")

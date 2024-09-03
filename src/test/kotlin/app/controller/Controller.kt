@@ -51,14 +51,13 @@ import org.springframework.web.bind.annotation.RestController
     ],
 )
 class Controller {
-
     @Operation(
         summary = "Get greeting for given name",
         parameters = [Parameter(name = "name", description = "The name of entity being greeted")],
     )
     @Schema(implementation = Greeting::class)
     @GetMapping("/greet/{name}")
-    fun greeting(@PathVariable name: String): ResponseEntity<Greeting> {
-        return ResponseEntity.ok(Greeting(message = "Hello $name!"))
-    }
+    fun greeting(
+        @PathVariable name: String,
+    ): ResponseEntity<Greeting> = ResponseEntity.ok(Greeting(message = "Hello $name!"))
 }

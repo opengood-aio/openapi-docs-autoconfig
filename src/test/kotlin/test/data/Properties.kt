@@ -12,41 +12,49 @@ import io.opengood.autoconfig.openapidocs.property.Oauth2ResourceProperty
 import io.opengood.autoconfig.openapidocs.property.OpenApiDocsProperties
 import io.opengood.autoconfig.openapidocs.property.SecurityProperty
 
-val openApiDocsProperties = OpenApiDocsProperties(
-    enabled = true,
-    paths = listOf("/greeting/**"),
-    title = "test title",
-    description = "test description",
-    version = "test version",
-    termsOfService = "https://test.tos.url",
-    contact = ContactProperty(
-        name = "test contact name",
-        url = "https://test.contact.url",
-        email = "test@domain.com",
-    ),
-    license = LicenseProperty(
-        name = "test license name",
-        url = "https://test.lic.url",
-    ),
-    security = SecurityProperty(
+val openApiDocsProperties =
+    OpenApiDocsProperties(
         enabled = true,
-        name = "test security",
-        description = "test security description",
-        scheme = Scheme.BEARER,
-        type = Type.HTTP,
-        bearerFormat = BearerFormat.JWT,
-        oauth2 = Oauth2Property(
-            grantType = Oauth2GrantType.CLIENT_CREDENTIALS,
-            resource = Oauth2ResourceProperty(
-                authorizationServerUri = "http://localhost/oauth2/authorize",
+        paths = listOf("/greeting/**"),
+        title = "test title",
+        description = "test description",
+        version = "test version",
+        termsOfService = "https://test.tos.url",
+        contact =
+            ContactProperty(
+                name = "test contact name",
+                url = "https://test.contact.url",
+                email = "test@domain.com",
             ),
-            client = Oauth2ClientProperty(
-                scopes = mapOf(
-                    Pair("test-1", "test-scope-1"),
-                    Pair("test-2", "test-scope-2"),
-                ),
+        license =
+            LicenseProperty(
+                name = "test license name",
+                url = "https://test.lic.url",
             ),
-            tokenUri = "http://localhost/oauth2/token",
-        ),
-    ),
-)
+        security =
+            SecurityProperty(
+                enabled = true,
+                name = "test security",
+                description = "test security description",
+                scheme = Scheme.BEARER,
+                type = Type.HTTP,
+                bearerFormat = BearerFormat.JWT,
+                oauth2 =
+                    Oauth2Property(
+                        grantType = Oauth2GrantType.CLIENT_CREDENTIALS,
+                        resource =
+                            Oauth2ResourceProperty(
+                                authorizationServerUri = "http://localhost/oauth2/authorize",
+                            ),
+                        client =
+                            Oauth2ClientProperty(
+                                scopes =
+                                    mapOf(
+                                        Pair("test-1", "test-scope-1"),
+                                        Pair("test-2", "test-scope-2"),
+                                    ),
+                            ),
+                        tokenUri = "http://localhost/oauth2/token",
+                    ),
+            ),
+    )

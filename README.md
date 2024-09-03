@@ -1,19 +1,19 @@
 # OpenAPI Docs Auto Configuration
 
-[![Build](https://github.com/opengoodio/openapi-docs-autoconfig/workflows/build/badge.svg)](https://github.com/opengoodio/openapi-docs-autoconfig/actions?query=workflow%3Abuild)
-[![Release](https://github.com/opengoodio/openapi-docs-autoconfig/workflows/release/badge.svg)](https://github.com/opengoodio/openapi-docs-autoconfig/actions?query=workflow%3Arelease)
-[![Codecov](https://codecov.io/gh/opengoodio/openapi-docs-autoconfig/branch/main/graph/badge.svg?token=AEEYTGK87F)](https://codecov.io/gh/opengoodio/openapi-docs-autoconfig)
-[![Release Version](https://img.shields.io/github/release/opengoodio/openapi-docs-autoconfig.svg)](https://github.com/opengoodio/openapi-docs-autoconfig/releases/latest)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.opengood.autoconfig/openapi-docs-autoconfig/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.opengood.autoconfig/openapi-docs-autoconfig)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/opengoodio/openapi-docs-autoconfig/master/LICENSE)
-[![FOSSA](https://app.fossa.com/api/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fopenapi-docs-autoconfig.svg?type=small)](https://app.fossa.com/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fopenapi-docs-autoconfig?ref=badge_small)
+[![Build](https://github.com/opengood-aio/openapi-docs-autoconfig/workflows/build/badge.svg)](https://github.com/opengood-aio/openapi-docs-autoconfig/actions?query=workflow%3Abuild)
+[![Release](https://github.com/opengood-aio/openapi-docs-autoconfig/workflows/release/badge.svg)](https://github.com/opengood-aio/openapi-docs-autoconfig/actions?query=workflow%3Arelease)
+[![CodeQL](https://github.com/opengood-aio/openapi-docs-autoconfig/actions/workflows/codeql.yml/badge.svg)](https://github.com/opengood-aio/openapi-docs-autoconfig/actions/workflows/codeql.yml)
+[![Codecov](https://codecov.io/gh/opengood-aio/openapi-docs-autoconfig/branch/main/graph/badge.svg?token=AEEYTGK87F)](https://codecov.io/gh/opengood-aio/openapi-docs-autoconfig)
+[![Release Version](https://img.shields.io/github/release/opengood-aio/openapi-docs-autoconfig.svg)](https://github.com/opengood-aio/openapi-docs-autoconfig/releases/latest)
+[![Maven Central](https://img.shields.io/maven-central/v/io.opengood.autoconfig/openapi-docs-autoconfig.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.opengood.autoconfig%22%20AND%20a:%22openapi-docs-autoconfig%22)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/opengood-aio/openapi-docs-autoconfig/master/LICENSE)
 
 Spring Boot auto-configuration for OpenAPI documentation using
 [Spring Doc](https://springdoc.org/)
 
 ## Compatibility
 
-* Java 17
+* Java 21
 * Spring Boot 3
 
 ## Setup

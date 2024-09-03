@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext
 
 @SpringBootTest(classes = [TestApplication::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 class BeanTest : FunSpec() {
-
     @Autowired
     lateinit var context: ApplicationContext
 

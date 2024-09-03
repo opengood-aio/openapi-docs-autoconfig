@@ -1,6 +1,8 @@
 package io.opengood.autoconfig.openapidocs.enumeration
 
-enum class BearerFormat(private val value: String) {
+enum class BearerFormat(
+    private val value: String,
+) {
     JWT("JWT"),
     ;
 

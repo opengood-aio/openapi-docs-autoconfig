@@ -1,6 +1,8 @@
 package io.opengood.autoconfig.openapidocs.enumeration
 
-enum class Scheme(private val value: String) {
+enum class Scheme(
+    private val value: String,
+) {
     BASIC("basic"),
     BEARER("bearer"),
     ;

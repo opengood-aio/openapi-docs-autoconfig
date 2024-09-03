@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.get
 @SpringBootTest(classes = [TestApplication::class], webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 class AccessTest : WordSpec() {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -23,7 +22,8 @@ class AccessTest : WordSpec() {
     init {
         "Service client accessing API endpoint" should {
             "Send valid request and receive success status indicating UI is accessible" {
-                mockMvc.get("/swagger-ui.html")
+                mockMvc
+                    .get("/swagger-ui.html")
                     .andDo { print() }
                     .andExpect {
                         status { is3xxRedirection() }
@@ -31,7 +31,8 @@ class AccessTest : WordSpec() {
             }
 
             "Send valid request and receive success status indicating API is accessible" {
-                mockMvc.get("/v3/api-docs")
+                mockMvc
+                    .get("/v3/api-docs")
                     .andDo { print() }
                     .andExpect {
                         status { is2xxSuccessful() }

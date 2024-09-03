@@ -17,8 +17,9 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @ConditionalOnProperty("openapi-docs.enabled", havingValue = "true")
 @EnableConfigurationProperties(value = [OpenApiDocsProperties::class])
-class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties) {
-
+class OpenApiDocsAutoConfiguration(
+    private val properties: OpenApiDocsProperties,
+) {
     @Bean
     fun openApi(): OpenAPI {
         log.info("Setup OpenAPI docs configuration")
@@ -35,19 +36,17 @@ class OpenApiDocsAutoConfiguration(private val properties: OpenApiDocsProperties
                             .name(properties.contact.name)
                             .url(properties.contact.url)
                             .email(properties.contact.email),
-                    )
-                    .license(
+                    ).license(
                         License()
                             .name(properties.license.name)
                             .url(properties.license.url),
                     ),
-            )
-            .also {
+            ).also {
                 if (properties.security.enabled) {
-                    it?.addSecurityItem(
-                        SecurityRequirement().addList(properties.security.name),
-                    )
-                        ?.components(
+                    it
+                        ?.addSecurityItem(
+                            SecurityRequirement().addList(properties.security.name),
+                        )?.components(
                             Components()
                                 .addSecuritySchemes(
                                     properties.security.name,

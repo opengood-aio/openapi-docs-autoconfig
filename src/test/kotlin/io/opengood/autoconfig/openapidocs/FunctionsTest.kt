@@ -6,13 +6,15 @@ import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.Paths
 
-class FunctionsTest : FunSpec({
+class FunctionsTest :
+    FunSpec({
 
-    test("getPaths returns path objects from specified list") {
-        val expected = Paths()
-            .addPathItem("/foo", PathItem().get(Operation()))
-            .addPathItem("/bar", PathItem().get(Operation()))
+        test("getPaths returns path objects from specified list") {
+            val expected =
+                Paths()
+                    .addPathItem("/foo", PathItem().get(Operation()))
+                    .addPathItem("/bar", PathItem().get(Operation()))
 
-        getPaths(listOf("/foo", "/bar")) shouldBe expected
-    }
-})
+            getPaths(listOf("/foo", "/bar")) shouldBe expected
+        }
+    })

@@ -2,6 +2,13 @@ package io.opengood.autoconfig.openapidocs.property
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+/**
+ * Configuration properties for OpenAPI documentation.
+ *
+ * This class defines the configuration properties for OpenAPI documentation with the prefix "openapi-docs".
+ * It includes properties for enabling/disabling the documentation, API paths, metadata (title, description, etc.),
+ * contact information, license information, and security settings.
+ */
 @ConfigurationProperties(prefix = "openapi-docs")
 data class OpenApiDocsProperties(
     val enabled: Boolean = true,

@@ -14,12 +14,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
+/**
+ * Spring Boot auto-configuration class for OpenAPI documentation.
+ * 
+ * This class automatically configures OpenAPI documentation for a Spring Boot application
+ * based on the properties defined in OpenApiDocsProperties. It is enabled when the
+ * "openapi-docs.enabled" property is set to "true".
+ */
 @AutoConfiguration
 @ConditionalOnProperty("openapi-docs.enabled", havingValue = "true")
 @EnableConfigurationProperties(value = [OpenApiDocsProperties::class])
 class OpenApiDocsAutoConfiguration(
     private val properties: OpenApiDocsProperties,
 ) {
+    /**
+     * Creates and configures an OpenAPI bean based on the provided properties.
+     *
+     * This method sets up the OpenAPI documentation with information about the API,
+     * including title, description, version, contact information, license, and security
+     * settings if enabled.
+     *
+     * @return Configured OpenAPI instance
+     */
     @Bean
     fun openApi(): OpenAPI {
         log.info("Setup OpenAPI docs configuration")

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean
 
 /**
  * Spring Boot auto-configuration class for OpenAPI documentation.
- * 
+ *
  * This class automatically configures OpenAPI documentation for a Spring Boot application
  * based on the properties defined in OpenApiDocsProperties. It is enabled when the
  * "openapi-docs.enabled" property is set to "true".
